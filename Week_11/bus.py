@@ -9,7 +9,9 @@ class Person:
 # remove_passenger(self): removes a passenger from the bus. If the bus is empty, print "Cannot remove passengers. Bus is empty."
 # Note: The add_passenger method should only accept Person objects as passengers. If the passenger is not a Person object, print "Invalid passenger. Please add a Person object."
 class Bus:
-    max_passengers = 10
+    def __init__(self, max_passengers):
+        self.max_passengers = max_passengers
+    
     current_passengers = 0
     def add_passenger(self, passenger):
         if isinstance(passenger, Person):            
@@ -29,7 +31,7 @@ class Bus:
             print("A Passenger has been removed from the bus.")
 # Main function: Create a Bus object and add and remove passengers to test the Bus class.
 def main():
-    bus_test = Bus()
+    bus_test = Bus(10)
     for i in range(11):
         person = Person()        
         bus_test.add_passenger(person)
