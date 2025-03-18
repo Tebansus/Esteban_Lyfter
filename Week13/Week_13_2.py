@@ -7,12 +7,23 @@ def check_number(func):
 
     def wrapper(*args, **kwargs):
         args_to_check = args[1:] if is_method else args
+        
+        # Check arguments
         for arg in args_to_check:
             try:
                 float(arg)
                 print(f"Argument: {arg} is a number")
             except ValueError:
                 raise ValueError(f"Argument: {arg} isn't a valid number") from None
+        
+        # Check keyword arguments
+        for value in kwargs.values():
+            try:
+                float(value)
+                print(f"Argument: {value} is a number")
+            except ValueError:
+                raise ValueError(f"Argument: {value} isn't a valid number") from None
+        
         return func(*args, **kwargs)
     return wrapper
 # Test class to pass to the decorator
