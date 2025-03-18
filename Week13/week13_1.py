@@ -1,14 +1,15 @@
 # Decorator function that prints the arguments and keyword arguments of a function
 def print_parameters(func):
     def wrapper(*args, **kwargs):
-        for arg in args[1:]:
+        for arg in args:
             print("Function Argument: ", arg)
+        for key, value in kwargs.items():
+            print(f"Keyword Argument {key}: {value}")
         
         result = func(*args, **kwargs)
         print("Function output is: ", result)
         return result
     return wrapper
-# Test class to pass to the decorator
 class test:
     @print_parameters
     def __init__(self, numbertopass, stringtopass):

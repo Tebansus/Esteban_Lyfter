@@ -1,14 +1,18 @@
-# Decorator function that prints the arguments and keyword arguments of a function
+# Decorator function that prints the arguments and keyword arguments of a function. Check if the first argument is self, if it is, ignore it and check the rest of the arguments, so that it can work with class functions.
+import inspect
 def check_number(func):
+    sig = inspect.signature(func)
+    params = list(sig.parameters.values())
+    is_method = params and params[0].name == 'self'
+
     def wrapper(*args, **kwargs):
-        for arg in args[1:]:
-            try :
+        args_to_check = args[1:] if is_method else args
+        for arg in args_to_check:
+            try:
                 float(arg)
-                print("Argument: ", arg, " is a number")
-                
+                print(f"Argument: {arg} is a number")
             except ValueError:
                 raise ValueError(f"Argument: {arg} isn't a valid number") from None
-                
         return func(*args, **kwargs)
     return wrapper
 # Test class to pass to the decorator
