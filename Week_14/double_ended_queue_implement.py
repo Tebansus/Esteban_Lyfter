@@ -11,10 +11,11 @@ class LinkedList:
     def __init__(self, head):
         self.head = head
     def print_structure(self):
-        curent_node = self.head
-        while (curent_node is not None):
-            print(curent_node.data)
-            curent_node = curent_node.next
+        current_node = self.head
+        while current_node is not None:
+            print(current_node.data, end=" <-> ")
+            current_node = current_node.next
+        print("None")
 # Double ended queue class that inherits from linked list class with push and pop methods for both left and right, uses super to call the parent class constructor and get_tail method to get the tail of the queue.
 class double_ended_queue(LinkedList):
     tail: Node
@@ -46,6 +47,7 @@ class double_ended_queue(LinkedList):
     # Pop left method that pops the left most node from the queue, by removing the head node and setting the next node as the new head.
     def pop_left(self):
         if self.head == None:
+            print("Queue is empty, please add nodes to the queue before popping.")
             return None
         popped_node = self.head
         if self.head.next == None:
@@ -55,6 +57,7 @@ class double_ended_queue(LinkedList):
     # Pop right method that pops the right most node from the queue, by traversing the queue from the head to the tail and removing the tail node.
     def pop_right(self):
         if self.tail == None:
+            print("Queue is empty, please add nodes to the queue before popping.")
             return None
         if self.tail == self.head:
             popped_node = self.head

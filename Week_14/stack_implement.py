@@ -14,12 +14,14 @@ class LinkedList:
     def print_structure(self):
         curent_node = self.head
         while (curent_node is not None):
-            print(curent_node.data)
+            print(curent_node.data, end="\n↓\n")
             curent_node = curent_node.next
+        print("None")
 # Queue class that inherits from linked list class with enqueue and dequeue methods
 class Stack(LinkedList):
     def pop(self):
         if self.head == None:
+            print("Stack is empty, please fill the stack before popping.")
             return None
         popped_node = self.head
         self.head = self.head.next

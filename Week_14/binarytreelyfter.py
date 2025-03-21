@@ -7,21 +7,69 @@ class Node:
         self.left = left
         self.right = right
 # Binary tree class with root node that traverses the tree in left hand side, root and right hand side order for the main tree and sub trees, using recursion.
+# Used this implementation as reference: https://www.geeksforgeeks.org/print-binary-tree-2-dimensions/
 class BinaryTree:
-    # Root node of the binary tree
-    root: Node
     def __init__(self, root):
         self.root = root
-    def print_structure(self):
-        def in_order_traversal(node):
-            if node:                
-                in_order_traversal(node.left)
-                print(node.data)                
-                in_order_traversal(node.right)
-        
-        in_order_traversal(self.root)
+# Class get height method that gets the height of the tree by traversing the tree in level order and incrementing the height for each level.
+    def get_height(self):
+        if self.root is None:
+            return 0
+        height = 0
+        queue = [self.root]
+        #uses a queue to traverse the tree in level order, but not for the tree structure itself.
+        while queue:
+            height += 1
+            
+            level_size = len(queue)
+            for _ in range(level_size):
+                node = queue.pop(0)
+                if node.left:
+                    
+                    queue.append(node.left)                    
+                if node.right:
+                    queue.append(node.right)
+                    
+        return height
 
-# Main fuction for testing the binary tree with 7 nodes.
+    def print_structure(self):
+        if self.root is None:
+            print("Tree is empty. Please add nodes to the tree before printing.")
+            return
+        # Use the height of the tree to calculate the maximum width of the tree and the current level of the tree.
+        height = self.get_height()
+        max_width = 2 ** height - 1
+        
+        current_level = [(self.root, (max_width - 1) // 2)]
+        
+        for level in range(height):
+            next_level = []
+            current_line = [' '] * max_width
+            branch_line = [' '] * max_width
+            
+            for node, pos in current_level:
+                if node is not None:
+                    current_line[pos] = node.data
+                    
+                    offset = 2 ** (height - level - 2)
+                    
+                    # Calculate branch positions based on parent-child midpoint for spacing and alignment.
+                    if node.left:
+                        left_pos = pos - offset
+                        next_level.append((node.left, left_pos))
+                        branch_line[(pos + left_pos) // 2] = '/'
+                        
+                    if node.right:
+                        right_pos = pos + offset
+                        next_level.append((node.right, right_pos))
+                        branch_line[(pos + right_pos) // 2] = '\\'
+            
+            print(''.join(current_line).rstrip())
+            if level < height - 1:
+                print(''.join(branch_line).rstrip())
+            
+            current_level = next_level
+
 def main():
     node1 = Node("1")
     node2 = Node("2")

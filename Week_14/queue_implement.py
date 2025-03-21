@@ -12,10 +12,11 @@ class LinkedList:
     def __init__(self, head):
         self.head = head
     def print_structure(self):
-        curent_node = self.head
-        while (curent_node is not None):
-            print(curent_node.data)
-            curent_node = curent_node.next
+        current_node = self.head
+        while current_node is not None:
+            print(current_node.data, end=" -> ")
+            current_node = current_node.next
+        print("None")
 # Queue class that inherits from linked list class with enqueue and dequeue methods
 class Queue(LinkedList):
     def enqueue(self, new_node):
@@ -31,6 +32,7 @@ class Queue(LinkedList):
         new_node.next = None    
     def dequeue(self):
         if self.head == None:
+            print("Queue is empty, please fill the queue first before dequeing.")
             return None
         dequeed_node = self.head
         self.head = self.head.next
