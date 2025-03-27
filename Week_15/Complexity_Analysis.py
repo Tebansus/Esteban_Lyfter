@@ -42,9 +42,10 @@ def check_if_lists_have_an_equal(list_a, list_b):
 #############################################################
 
 
-# For the function to find the maximum element in a list, the complexity is O(n) because it iterates through the list once.
+# For the function to find the maximum element in a list, the complexity is O(10) because it iterates through the list once, but a maximum of 10 times.
 # In the best case scenario, the complexity is O(1) because the function returns immediately if the list is empty.
-# However, in the worst case scenario, the complexity is O(n) because the function iterates through the list once to find the maximum element.
+# Normally however, if N <10, the complexity is O(N), but if N > 10, the complexity is O(10), which would best be described as O(min(N, 10)).
+# So, in the worst scenario, the complexity is O(10), because it can be O(1), O(2), O(3)...up until O(10), which is the worst case scenario.
 def print_10_or_less_elements(list_to_print):
 	list_len = len(list_to_print)
 	for index in range(min(list_len, 10)):
@@ -58,6 +59,7 @@ def print_10_or_less_elements(list_to_print):
 # The complexity of the function is O(n^3) because it contains three nested for loops. In the best case scenario, the complexity is O(1) because the function returns immediately if the list is empty.
 # However, in the worst case scenario, the complexity is O(n^3) because the function iterates through the list three times. 
 # So, because Big O notation is used to describe the worst case scenario, the complexity of the function is O(n^3).
+# However, this assumes all lists are roughly the same size or similar enough when talking about sizes apporaching mathematical limits of infinity. If the lists are of different sizes and not approaching infinity, the complexity is better described as O(n*m*p) where n, m, and p are the sizes of the three lists.
 def generate_list_trios(list_a, list_b, list_c):
 	result_list = []
 	for element_a in list_a:
