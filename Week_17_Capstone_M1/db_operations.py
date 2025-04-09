@@ -1,193 +1,167 @@
 import sqlite3
+import os
+import csv
 from datetime import datetime, timezone
 ## Reset the database to its initial state
-# This function will drop the existing tables and create new ones
+# This function will delete the existing csv files and create new ones with the same headers
 # It also resets the balance to 0 in the total_tracker table
 def reset_db():
-    # Connect to SQLite database
-    conn = sqlite3.connect('expense_database.db')
-    cursor = conn.cursor()
-
-    # Drop the  tables if they exist
-    cursor.execute("DROP TABLE IF EXISTS users")
-    cursor.execute("DROP TABLE IF EXISTS categories")
-    cursor.execute("DROP TABLE IF EXISTS total_tracker")
-
-    # Create a new set of tables
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS users (
-        date TEXT,
-        Title TEXT,
-        Category TEXT,
-        amount REAL,
-        resulting_balance REAL
-    )
-    '''
-    )
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS categories (
-        category_name TEXT PRIMARY KEY       
-    )
-    '''
-    )
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS total_tracker (
-        Total_Balance REAL       
-    )
-    '''
-    )
-    cursor.execute('INSERT INTO total_tracker (Total_Balance) VALUES (0)')
-    
-    # Commit and close the connection
-    conn.commit()
-    conn.close()
+    with open("users.csv", "w", newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["date", "Title", "Category", "amount", "resulting_balance"])
+    with open("categories.csv", "w", newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["category_name"])
+    with open("total_tracker.csv", "w", newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["Total_Balance"])
+        writer.writerow([0])
+   
+   
 # Connect to SQLite database or create it if it doesn't exist.
 # Create the necessary tables if they don't exist.
 # If the table is empty, insert the default value of 0 into the total_tracker table, else do nothing.
 def create_database():
-    
-    conn = sqlite3.connect('expense_database.db')
-    cursor = conn.cursor()
-
-    # Create a table for user data
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS users (
-        date TEXT,
-        Title TEXT,
-        Category TEXT,
-        amount REAL,
-        resulting_balance REAL
-    )
-    '''
-    )
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS categories (
-        category_name TEXT PRIMARY KEY       
-    )
-    '''
-    )
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS total_tracker (
-        Total_Balance REAL       
-    )
-    '''
-    )
-    # Check if the table is empty
-    cursor.execute('SELECT COUNT(*) FROM total_tracker')
-    row_count = cursor.fetchone()[0]
-
-    
-    if row_count == 0:
-        cursor.execute('INSERT INTO total_tracker (Total_Balance) VALUES (0)')
-    
-    
-    conn.commit()
-    conn.close()
-
+    if not os.path.exists("user.csv"):
+        with open("users.csv", "w", newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(["date", "Title", "Category", "amount", "resulting_balance"])
+    if not os.path.exists("categories.csv"):
+        with open("categories.csv", "w", newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(["category_name"])
+    if not os.path.exists("total_tracker.csv"):
+        with open("total_tracker.csv", "w", newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(["Total_Balance"])
+            writer.writerow([0])
+    else:
+        with open("total_tracker.csv", "r") as file:
+            reader = csv.reader(file)
+            rows = list(reader)
+            if len(rows) <= 1:
+                with open("total_tracker.csv", "a", newline='') as file:
+                    writer = csv.writer(file)
+                    writer.writerow([0])
 # This function will add a new category to the categories table
 # It checks if the category already exists before adding it
 # If the category already exists, it returns False, otherwise it returns True
 def add_category_db(category_name):
-    conn = sqlite3.connect('expense_database.db')
-    cursor = conn.cursor()
     # Check if the category already exists
-    cursor.execute("SELECT * FROM categories WHERE category_name = ?", (category_name,))
-    existing_category = cursor.fetchone()
-    if existing_category:
-        conn.close()
+    categories = get_categories()
+    if category_name in categories:
         return False
     else:
-        # Insert the new category into the categories table
-        cursor.execute("INSERT INTO categories (category_name) VALUES (?)", (category_name,))
-        conn.commit()
-        conn.close()
+        # Append the new category to categories.csv
+        with open('categories.csv', 'a', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow([category_name])
         return True
     
 # This function will load the data from the users table and return it as a list of tuples.
 # It will be used to populate the table in the GUI.
 def load_data():    
-    conn = sqlite3.connect('expense_database.db')
-    cursor = conn.cursor()   
-    cursor.execute("SELECT * FROM users")
-    data = cursor.fetchall()   
-    conn.close()
+    if not os.path.exists('users.csv'):
+        return []
+    
+    with open('users.csv', 'r', newline='') as f:
+        reader = csv.reader(f)
+        next(reader) 
+        data = []
+        for row in reader:            
+            if len(row) >= 5:                
+                try:
+                    row[3] = float(row[3])
+                    row[4] = float(row[4])
+                except ValueError:
+                    
+                    row[3] = 0
+                    row[4] = 0
+                data.append(tuple(row))
     return data
 # This function will retrieve all categories from the categories table and return them as a list
 # It will be used to populate the dropdown menu for adding money or withdrawing money.
 def get_categories():
-    conn = sqlite3.connect('expense_database.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT category_name FROM categories")
-    categories = [row[0] for row in cursor.fetchall()]
-    conn.close()
-    return categories
+    if not os.path.exists('categories.csv'):
+        return []
+    
+    with open('categories.csv', 'r', newline='') as file:
+        reader = csv.reader(file)
+        next(reader) 
+        return [row[0] for row in reader if row] 
 # This function will add money to the database
 # It will insert a new record into the users table with the current date, title, category, amount, and resulting balance
 # It will also update the total balance in the total_tracker table
 def add_money_to_db(amount_add, category, type_income):     
-    
-    current_utc_time = datetime.now(timezone.utc)
-    conn = sqlite3.connect('expense_database.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT Total_Balance FROM total_tracker")
-    total_to_modify = cursor.fetchone()[0]
-    
-    cursor.execute("""INSERT INTO users
-                   (date,
-                   Title,
-                   Category,
-                   amount,
-                   resulting_balance)
-                   VALUES (?,?,?,?,?)                   
-                   """
-                   ,
-                   (
-                       current_utc_time,
-                       type_income,
-                       category,
-                       amount_add,
-                       total_to_modify + amount_add
-                    
-                   )
-                   )
-    cursor.execute("UPDATE total_tracker SET Total_Balance = ? WHERE rowid=1", (total_to_modify + amount_add,))
-    conn.commit()
-    conn.close()
+    current_utc_time = datetime.now(timezone.utc)    
+    # Get the current total balance
+    total_to_modify = 0.0
+    if os.path.exists('total_tracker.csv'):
+        with open('total_tracker.csv', 'r', newline='') as f:
+            reader = csv.reader(f)
+            next(reader, None)  
+            try:
+                row = next(reader, None)
+                if row:
+                    total_to_modify = float(row[0])
+            except (StopIteration, ValueError):
+                total_to_modify = 0
+      
+    # Append the transaction to users.csv
+    with open('users.csv', 'a', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            current_utc_time,
+            type_income,
+            category,
+            amount_add,
+            total_to_modify + amount_add
+        ])
+    # Update the total balance in total_tracker.csv
+    with open('total_tracker.csv', 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['Total_Balance'])
+        writer.writerow([total_to_modify + amount_add])
+        
+        
+        
 # This function will withdraw money from the database
 # It will insert a new record into the users table with the current date, title, category, amount, and resulting balance
 def withdraw_money_from_db(amount_withdraw, category, type_income):     
+    current_utc_time = datetime.now(timezone.utc)    
+    # Get the current total balance
+    total_to_modify = 0.0
+    if os.path.exists('total_tracker.csv'):
+        with open('total_tracker.csv', 'r', newline='') as f:
+            reader = csv.reader(f)
+            next(reader, None)  #
+            try:
+                row = next(reader, None)
+                if row:
+                    total_to_modify = float(row[0])
+            except (StopIteration, ValueError):
+                total_to_modify = 0
     
-    current_utc_time = datetime.now(timezone.utc)
-    conn = sqlite3.connect('expense_database.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT Total_Balance FROM total_tracker")
-    total_to_modify = cursor.fetchone()[0]
-    if total_to_modify - amount_withdraw >= 0:    
-        cursor.execute("""INSERT INTO users
-                    (date,
-                    Title,
-                    Category,
-                    amount,
-                    resulting_balance)
-                    VALUES (?,?,?,?,?)                   
-                    """
-                    ,
-                    (
-                        current_utc_time,
-                        type_income,
-                        category,
-                        -amount_withdraw,
-                        total_to_modify - amount_withdraw
-                        
-                    )
-                    )
-        cursor.execute("UPDATE total_tracker SET Total_Balance = ? WHERE rowid=1", (total_to_modify - amount_withdraw,))
-        conn.commit()
-        conn.close()
+    # Check if the balance is sufficient
+    if total_to_modify - amount_withdraw >= 0:        
+        # Append the transaction to users.csv
+        with open('users.csv', 'a', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow([
+                current_utc_time,
+                type_income,
+                category,
+                -amount_withdraw,  # Negative amount for withdrawals
+                total_to_modify - amount_withdraw
+            ])        
+        # Update the total balance in total_tracker.csv
+        with open('total_tracker.csv', 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['Total_Balance'])
+            writer.writerow([total_to_modify - amount_withdraw])
+        
         return True
     else:
-        conn.commit()
-        conn.close()
         return False
     
     

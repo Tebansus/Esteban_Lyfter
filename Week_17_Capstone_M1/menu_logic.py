@@ -1,4 +1,4 @@
-import PySimpleGUI as sg
+import FreeSimpleGUI as sg
 from operatrions import reset_tool
 from operatrions import add_category
 from operatrions import add_money

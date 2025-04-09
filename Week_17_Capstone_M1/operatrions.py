@@ -1,5 +1,5 @@
 
-import PySimpleGUI as sg
+import FreeSimpleGUI as sg
 from db_operations import reset_db
 from db_operations import add_category_db
 from db_operations import get_categories

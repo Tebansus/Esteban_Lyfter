@@ -1,4 +1,4 @@
-import PySimpleGUI as sg
+import FreeSimpleGUI as sg
 
 # This function creates the main menu window for the Money Management System.
 # It includes buttons for resetting the tool, adding a category, withdrawing money, adding money, and exiting the application.
