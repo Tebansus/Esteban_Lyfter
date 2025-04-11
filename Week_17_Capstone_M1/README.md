@@ -40,7 +40,3 @@ A financial tracking application built with Python, PySimpleGUI, and SQLite3.
    - Requires confirmation to prevent accidental resets.
 
 
-## Note on SQLite3
-
-SQLite3 was chosen for this project after reviewing the official Python documentation. It was chosen because it's already in the python ecosystem, it can handle access much easier than a dictionary and it uses SQL which is better for targeting specific data points.
-
