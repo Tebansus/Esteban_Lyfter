@@ -6,9 +6,9 @@ app = Flask(__name__)
 # Allowed status values
 ALLOWED_STATUS = {"to_do", "in_progress", "done"}
 
-
-# Code to return the list of tasks and filter them based on status if the query parameter is provided
-class TasksListAPI(MethodView):
+class TaskAPI(MethodView):
+    # Function to get the list of tasks. It can filter tasks based on their status if a status query parameter is provided.
+    # It returns the list of tasks in JSON format.
     def get(self):
         filtered_tasks = Todo_list
         status = request.args.get("status")
@@ -17,12 +17,10 @@ class TasksListAPI(MethodView):
                 filter(lambda task: task["status"].lower() == status.lower(), filtered_tasks)
             )
         return jsonify({"tasks": filtered_tasks}), 200
-
-# Function to add a new task to the Todo_list. It ensures the task doesnt have a duplicate identifier and that the status is one of the allowed values.
-# It also checks if the task is in the correct format and returns an error message if not.
-# Also verifies all required fields are present in the request.
-#Then, it appends the new task to the Todo_list and saves it to the JSON file.
-class AddTaskAPI(MethodView):    
+    # Function to add a new task to the Todo_list. It ensures the task doesnt have a duplicate identifier and that the status is one of the allowed values.
+    # It also checks if the task is in the correct format and returns an error message if not.
+    # Also verifies all required fields are present in the request.
+    #Then, it appends the new task to the Todo_list and saves it to the JSON file.
     def post(self):
         new_task = request.get_json(silent=True)
         if not isinstance(new_task, dict):
@@ -51,32 +49,10 @@ class AddTaskAPI(MethodView):
         with open("Todo_list.json", "w") as file:
             json.dump(Todo_list, file, indent=4)
         return (jsonify(message="Task added successfully", tasks=Todo_list), 201)
-
-# Function to delete a task from the list. It checks if the  identifier is provided and if it exists in the list.
-# If the task is found, it removes it from the list and saves the updated list to the JSON file.
-# If the task is not found, it returns an error message.
-class DeleteTaskAPI(MethodView):
-    def post(self):
-        task_identifier = request.get_json(silent=True)
-        if not isinstance(task_identifier, dict):
-            return jsonify({"error": "Invalid task format, please send JSON object"}), 400
-        identifier = task_identifier.get("identifier")
-        if not identifier:
-            return jsonify(error =  "Missing required fields"), 400
-        for task in Todo_list:
-            if task["identifier"] == identifier:
-                Todo_list.remove(task)
-                with open("Todo_list.json", "w") as file:
-                    json.dump(Todo_list, file, indent=4)
-                return jsonify(message="Task deleted successfully", tasks=Todo_list), 200
-            
-        return jsonify(error="Task not found"), 404
-
-# Update function to modify an existing task in the Todo_list. It checks if the identifier is provided and if it exists in the list.
-# If the task is found, it updates the task with the new values provided in the request.
-# Not all fields neeed to be provided, only the ones that need to be updated.
-class updateTaskAPI(MethodView):
-    def post(self):
+    # Update function to modify an existing task in the Todo_list. It checks if the identifier is provided and if it exists in the list.
+    # If the task is found, it updates the task with the new values provided in the request.
+    # Not all fields neeed to be provided, only the ones that need to be updated.
+    def put(self):
         task_data = request.get_json(silent=True)
         if not isinstance(task_data, dict):
             return jsonify(error="Invalid task format, please send JSON object"), 400
@@ -99,21 +75,39 @@ class updateTaskAPI(MethodView):
                     task["status"] = status
                 with open("Todo_list.json", "w") as file:
                     json.dump(Todo_list, file, indent=4)
-                return jsonify(message="Task updated successfully", tasks=Todo_list), 200
+                return jsonify(message="Task updated successfully", tasks=Todo_list), 200      
+    # Function to delete a task from the list. It checks if the  identifier is provided and if it exists in the list.
+    # If the task is found, it removes it from the list and saves the updated list to the JSON file.
+    # If the task is not found, it returns an error message.
+    def delete(self):
+        task_identifier = request.get_json(silent=True)
+        if not isinstance(task_identifier, dict):
+            return jsonify({"error": "Invalid task format, please send JSON object"}), 400
+        identifier = task_identifier.get("identifier")
+        if not identifier:
+            return jsonify(error =  "Missing required fields"), 400
+        for task in Todo_list:
+            if task["identifier"] == identifier:
+                Todo_list.remove(task)
+                with open("Todo_list.json", "w") as file:
+                    json.dump(Todo_list, file, indent=4)
+                return jsonify(message="Task deleted successfully", tasks=Todo_list), 200
+            
+        return jsonify(error="Task not found"), 404
+        
+
+
+
+
+
 
 # Main function to run the Flask application. It checks if the Todo_list.json file exists and loads the tasks from it.
 # If the file does not exist, it initializes an empty Todo_list and starts the application.
 # This version uses the MethodView class to define the API endpoints.
 # It defines the routes for listing, adding, deleting, and updating tasks using the MethodView class. and add_url_rule method.
 if __name__ == "__main__":
-    tasks_view = TasksListAPI.as_view("tasks_list_api")
-    app.add_url_rule("/Tasks_List", view_func=tasks_view, methods=["GET"])
-    tasks_add = AddTaskAPI.as_view("add_task_api")
-    app.add_url_rule("/Add_Task", view_func=tasks_add, methods=["POST"])
-    tasks_delete = DeleteTaskAPI.as_view("delete_task_api")
-    app.add_url_rule("/Delete_Task", view_func=tasks_delete, methods=["POST"])
-    tasks_update = updateTaskAPI.as_view("update_task_api")
-    app.add_url_rule("/Update_Task", view_func=tasks_update, methods=["POST"])
+    task_view = TaskAPI.as_view("task_api")
+    app.add_url_rule("/tasks", view_func=task_view, methods=["GET", "POST", "PUT", "DELETE"])
     if os.path.exists("Todo_list.json"):
         with open("Todo_list.json", "r") as file:
             Todo_list = json.load(file)

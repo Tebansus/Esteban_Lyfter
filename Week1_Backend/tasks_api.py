@@ -7,7 +7,7 @@ app = Flask(__name__)
 # Allowed status values
 ALLOWED_STATUS = {"to_do", "in_progress", "done"}
 # Code to return the list of tasks and filter them based on status if the query parameter is provided
-@app.route("/Tasks_List", methods=["GET"])
+@app.route("/tasks_list", methods=["GET"])
 def return_tasks():
     filtered_tasks = Todo_list
     status = request.args.get("status")
@@ -21,7 +21,7 @@ def return_tasks():
 # It also checks if the task is in the correct format and returns an error message if not.
 # Also verifies all required fields are present in the request.
 #Then, it appends the new task to the Todo_list and saves it to the JSON file.
-@app.route("/Add_Task", methods=["POST"])
+@app.route("/add_task", methods=["POST"])
 def add_task():
     new_task = request.get_json(silent=True)
     if not isinstance(new_task, dict):
@@ -54,7 +54,7 @@ def add_task():
 # Function to delete a task from the list. It checks if the  identifier is provided and if it exists in the list.
 # If the task is found, it removes it from the list and saves the updated list to the JSON file.
 # If the task is not found, it returns an error message.
-@app.route("/Delete_Task", methods=["POST"])
+@app.route("/delete_task", methods=["DELETE"])
 def delete_task():
     task_identifier = request.get_json(silent=True)
     if not isinstance(task_identifier, dict):
@@ -74,7 +74,7 @@ def delete_task():
 # Update function to modify an existing task in the Todo_list. It checks if the identifier is provided and if it exists in the list.
 # If the task is found, it updates the task with the new values provided in the request.
 # Not all fields neeed to be provided, only the ones that need to be updated.
-@app.route("/Update_Task", methods=["POST"])
+@app.route("/update_task", methods=["PUT"])
 def update_task():
     task_data = request.get_json(silent=True)
     if not isinstance(task_data, dict):
