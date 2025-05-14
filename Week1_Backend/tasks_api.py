@@ -6,8 +6,21 @@ app = Flask(__name__)
 
 # Allowed status values
 ALLOWED_STATUS = {"to_do", "in_progress", "done"}
+
+#Central app that routes the requests to the appropriate function based on the HTTP method used.
+@app.route("/tasks", methods=["GET", "POST", "PUT", "DELETE"])
+def task_handler():
+    if request.method == "GET":
+        return return_tasks()
+    elif request.method == "POST":
+        return add_task()
+    elif request.method == "PUT":
+        return update_task()
+    elif request.method == "DELETE":
+        return delete_task()
+    else:
+        return jsonify(error= "Method not allowed"), 405
 # Code to return the list of tasks and filter them based on status if the query parameter is provided
-@app.route("/tasks-list", methods=["GET"])
 def return_tasks():
     filtered_tasks = Todo_list
     status = request.args.get("status")
@@ -21,7 +34,7 @@ def return_tasks():
 # It also checks if the task is in the correct format and returns an error message if not.
 # Also verifies all required fields are present in the request.
 #Then, it appends the new task to the Todo_list and saves it to the JSON file.
-@app.route("/add-task", methods=["POST"])
+
 def add_task():
     new_task = request.get_json(silent=True)
     if not isinstance(new_task, dict):
@@ -54,7 +67,7 @@ def add_task():
 # Function to delete a task from the list. It checks if the  identifier is provided and if it exists in the list.
 # If the task is found, it removes it from the list and saves the updated list to the JSON file.
 # If the task is not found, it returns an error message.
-@app.route("/delete-task", methods=["DELETE"])
+
 def delete_task():
     task_identifier = request.get_json(silent=True)
     if not isinstance(task_identifier, dict):
@@ -74,7 +87,7 @@ def delete_task():
 # Update function to modify an existing task in the Todo_list. It checks if the identifier is provided and if it exists in the list.
 # If the task is found, it updates the task with the new values provided in the request.
 # Not all fields neeed to be provided, only the ones that need to be updated.
-@app.route("/update-task", methods=["PUT"])
+
 def update_task():
     task_data = request.get_json(silent=True)
     if not isinstance(task_data, dict):
