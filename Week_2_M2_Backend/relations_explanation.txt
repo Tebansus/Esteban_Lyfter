@@ -1,0 +1,3 @@
+Products to Invoice Items: the relationship would be 1 to many, as a single product can appear on many invoice items
+Invoice to invoice items: An invoice can be composed of many invoice items, which would make it 1 to many.
+Users to products: This would be many to many, as a single user can add many products, and a product can be in a lot of user's shopping carts.
