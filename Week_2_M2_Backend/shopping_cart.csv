@@ -1,2 +1,2 @@
-id,user_email,product_id,quantity
-1,example@example.com,1,1
+id,user_email,status,date_created
+1,example@example.com,open,5/2/2025
