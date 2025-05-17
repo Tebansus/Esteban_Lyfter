@@ -1,0 +1,18 @@
+Direct Relationships:
+
+Products to Invoice Items: the relationship would be 1 to many, as a single product can appear on many invoice items.
+
+Invoice to invoice items: An invoice can be composed of many invoice items, which would make it 1 to many.
+
+shopping_cart to shopping_cart_items: A shopping cart can be composed of many products, while 1 shopping cart item belongs to 1 shopping cart, so its 1 to many.
+
+products to shopping cart items: It's a 1 to many relationship, as a product can appear on may shopping kart items, but each item refers to one product.
+
+
+
+Indirect relationships:
+
+
+Invoice to products: By passing through the invoice_items table, these two are many to many, as an invoice can reference many products (again, through the junction table) and a product can appear on many invoice.
+
+Shopping Carts to Products: Same as invocie to products, a shopping cart can have many products and a product can be refereced in many shopping carts, by going through the shopping_cart_items junction table, so it's many to many.
