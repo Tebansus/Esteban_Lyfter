@@ -1,63 +1,52 @@
-from sqlalchemy import create_engine, Column, Integer, String, Table, MetaData, ForeignKey
-from sqlalchemy.schema import CreateSchema
+from contextlib import contextmanager
+from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 class PgManager:
-    # Constructor to initialize the database connection, it also links the schema and starts the engine, session, and metadata
-    # The metadata is shared across all tables created in this class
+    # Uses shared metadata and engine for all repositories
+    # This class manages the connection to the PostgreSQL database
+    # It initializes the connection parameters and creates a scoped session
+    # Then, with the context manager, it provides a session scope for executing database operations
     def __init__(self, db_name, user, password, host, port=5432):
         self.db_url = f"postgresql://{user}:{password}@{host}:{port}/{db_name}"
         self.engine = create_engine(self.db_url)
-        self.Session = scoped_session(sessionmaker(bind=self.engine))        
-        self.metadata = MetaData(schema="lyfter_week6")
+        self.Session = scoped_session(sessionmaker(bind=self.engine))
+        self.metadata = MetaData(schema="lyfter_orm")
         print("Connection created successfully")
-    # Method to close the connection, it removes the session
-    def close_connection(self):
-        self.Session.remove()
-        print("Connection closed")
-    # Method to create tble if it does not exist, it takes the schema name, table name, and columns as parameters
-    def create_table(self, schema_name, table_name, columns):       
-        table = Table(table_name, self.metadata, *columns)      
-        self.metadata.create_all(self.engine)
-        print(f"Table '{table_name}' created successfully in schema '{schema_name}'")
-        
-    # Methods to add a table entry with the insert smt, by calling the table contents with the engine and metadata
-    def add_table_entry(self, schema_name, table_name, **kwargs):
+
+    # Context manager function to handle session scope with the session functionality of SQLAlchemy ORM
+    @contextmanager
+    def session_scope(self):
         session = self.Session()
-        
-        table = Table(table_name, self.metadata, autoload_with=self.engine)
-        insert_stmt = table.insert().values(**kwargs)
-        session.execute(insert_stmt)
-        session.commit()
-        print(f"Entry added to table '{table_name}' in schema '{schema_name}'")
-        session.close()
-    # Methods to get all entries from a table, it takes the schema name and table name as parameters, then autoloads the table 
-    # with the engine and metadata, and executes a select statement to retrieve all entries
-    def get_table_entries(self, schema_name, table_name):
-        session = self.Session()        
-        table = Table(table_name, self.metadata, autoload_with=self.engine)
-        select_stmt = table.select()
-        result = session.execute(select_stmt).fetchall()
-        session.close()
-        print(f"Entries retrieved from table '{table_name}' in schema '{schema_name}'")
+        try:
+            yield session
+            session.commit()
+        except Exception:
+            session.rollback()
+            raise
+        finally:
+            session.close()
+
+    # Universal CRUD methods that work with any Table instance
+    # These methods allow you to add, retrieve, edit, and delete entries in any table
+    # Each repo calls these methods with the specific table instance and parameters
+    def add_table_entry(self, table, **kwargs):
+        with self.session_scope() as sess:
+            sess.execute(table.insert().values(**kwargs))
+        print(f"Entry added to '{table.name}'")
+
+    def get_table_entries(self, table):
+        with self.session_scope() as sess:
+            result = sess.execute(table.select()).fetchall()
+        print(f"Entries retrieved from '{table.name}'")
         return result
-    # Methods to edit a table entry, it takes the schema name, table name, and entry id as parameters, then autoloads the table
-    # with the engine and metadata, and executes an update statement to modify the entry with the
-    def edit_table_entry(self, schema_name, table_name, entry_id, **kwargs):
-        session = self.Session()       
-        table = Table(table_name, self.metadata, autoload_with=self.engine)
-        update_stmt = table.update().where(table.c.id == entry_id).values(**kwargs)
-        session.execute(update_stmt)
-        session.commit()
-        print(f"Entry with ID '{entry_id}' updated in table '{table_name}' in schema '{schema_name}'")
-        session.close()
-    # Methods to delete a table entry, it takes the schema name, table name, and entry id as parameters, then autoloads the table
-    # with the engine and metadata, and executes a delete statement to remove the entry with the
-    def delete_table_entry(self, schema_name, table_name, entry_id):
-        session = self.Session()        
-        table = Table(table_name, self.metadata, autoload_with=self.engine)
-        delete_stmt = table.delete().where(table.c.id == entry_id)
-        session.execute(delete_stmt)
-        session.commit()
-        print(f"Entry with ID '{entry_id}' deleted from table '{table_name}' in schema '{schema_name}'")
-        session.close()
+
+    def edit_table_entry(self, table, entry_id, **kwargs):
+        with self.session_scope() as sess:
+            sess.execute(table.update().where(table.c.id == entry_id).values(**kwargs))
+        print(f"Entry {entry_id} updated in '{table.name}'")
+
+    def delete_table_entry(self, table, entry_id):
+        with self.session_scope() as sess:
+            sess.execute(table.delete().where(table.c.id == entry_id))
+        print(f"Entry {entry_id} deleted from '{table.name}'")

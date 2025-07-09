@@ -1,68 +1,38 @@
-class User_functions:
-    def __init__(self, PgManager):
-        self.pg_manager = PgManager
-    # User function to add users by calling the add_table_entry method from the PgManager class
-    # It takes the name, email, and password as parameters and adds them to the users table
-    def add_users(self, name, email, password):
-        try: 
-            self.pg_manager.add_table_entry(
-                schema_name="lyfter_week6",
-                table_name="users",
-                name=name,
-                email=email,
-                password=password
-            )
-        except Exception as e:
-            print(f"Error adding user: {e}")
-            return
-        print(f"User '{name}' added successfully.")
-    # function to modify users by calling the edit_table_entry method from the PgManager class
-    # It takes the user_id and optional parameters name, email, and password to update the user in the users table
+from sqlalchemy import Column, Integer, String, Table
 
-    def modif_user(self, user_id, name=None, email=None, password=None):
-        updated_fields = {}
-        if name:
-            updated_fields['name'] = name
-        if email:
-            updated_fields['email'] = email
-        if password:
-            updated_fields['password'] = password
+class UserRepo:
+    def __init__(self, pg_manager):
+        self.pg_manager = pg_manager
 
-        try:
-            self.pg_manager.edit_table_entry(
-                schema_name="lyfter_week6",
-                table_name="users",
-                entry_id=user_id,
-                **updated_fields
-            )
-        except Exception as e:
-            print(f"Error modifying user: {e}")
-            return
-        print(f"User '{user_id}' modified successfully.")
-    # Delete user function to remove a user by calling the delete_table_entry method from the PgManager class
+        # Declare the table once
+        self.table = Table(
+            "users",
+            self.pg_manager.metadata,
+            Column("id", Integer, primary_key=True),
+            Column("name", String(50), nullable=False),
+            Column("email", String(100), nullable=False, unique=True),
+            Column("password", String(100), nullable=False),
+            extend_existing=True          # important for multiple runs
+        )
+        # Create it in the database (does nothing if it already exists)
+        self.pg_manager.metadata.create_all(self.pg_manager.engine)
+
+    # CRUD functions
+    # Add_user - adds a new user to the database by calling the add_table_entry method
+    def add_user(self, name, email, password):
+        self.pg_manager.add_table_entry(
+            self.table,
+            name=name,
+            email=email,
+            password=password
+        )
+    # Modify_user - modifies an existing user by calling the edit_table_entry method
+    def modify_user(self, user_id, **fields):
+        self.pg_manager.edit_table_entry(self.table, user_id, **fields)
+    # Delete_user - deletes a user from the database by calling the delete_table_entry method
     def delete_user(self, user_id):
-        try:
-            self.pg_manager.delete_table_entry(
-                schema_name="lyfter_week6",
-                table_name="users",
-                entry_id=user_id
-            )
-        except Exception as e:
-            print(f"Error deleting user: {e}")
-            return
-    # Check all users function to retrieve and print all users from the users table
-    def check_all_users(self):
-        try:
-            users = self.pg_manager.get_table_entries(
-                schema_name="lyfter_week6",
-                table_name="users"
-            )
-            if not users:
-                print("No users found.")
-                return
-            for user in users:
-                print(user)
-        except Exception as e:
-            print(f"Error retrieving users: {e}")
-            return
-        print("Users retrieved successfully.")
+        self.pg_manager.delete_table_entry(self.table, user_id)
+    # List_users - retrieves and prints all users from the database
+    def list_users(self):
+        for row in self.pg_manager.get_table_entries(self.table):
+            print(row)

@@ -1,76 +1,41 @@
+from sqlalchemy import Column, Integer, String, Table, ForeignKey
+
 class AddressRepo:
     def __init__(self, pg_manager):
         self.pg_manager = pg_manager
-    # Function to add an address by calling the add_table_entry method from the PgManager class
-    # It takes the user_id, street, city, and country as parameters and adds them to the address table
+        # Declare the table once
+        # This table is for storing addresses linked to users
+        self.table = Table(
+            "address",
+            self.pg_manager.metadata,
+            Column("id", Integer, primary_key=True),
+            Column("user_id", Integer, ForeignKey("lyfter_orm.users.id"), nullable=False),
+            Column("street", String(100), nullable=False),
+            Column("city", String(50), nullable=False),
+            Column("country", String(50), nullable=False),
+            extend_existing=True
+        )
+        self.pg_manager.metadata.create_all(self.pg_manager.engine)
+    # CRUD functions, first add_address function that adds a new address to the database
     def add_address(self, user_id, street, city, country):
-        
-        try:
-            if user_id is None:
-                raise ValueError("User ID cannot be None")
-            self.pg_manager.add_table_entry(
-                schema_name = "lyfter_week6",
-                table_name = "address",
-                user_id = user_id,
-                street = street,
-                city = city,
-                country = country
-
-            )
-        except Exception as e:
-            print(f"Error adding address: {e}")
-            return 
-        print("Address added successfully")
-    # Function to modify an address by calling the edit_table_entry method from the PgManager class
-    # It takes the address_id and optional parameters user_id, street, city, and country to update the address in the address table
-    def modify_address(self, address_id, user_id=None, street=None, city=None, country=None):
-        field_to_modify = {}
-        if user_id:
-            field_to_modify['user_id'] = user_id
-        if street:
-            field_to_modify['street'] = street
-        if city:
-            field_to_modify['city'] = city
-        if country:
-            field_to_modify['country'] = country
-        
-        try:
-            self.pg_manager.edit_table_entry(
-                schema_name = "lyfter_week6",
-                table_name = "address",
-                entry_id = address_id,
-                **field_to_modify
-            )
-        except Exception as e:
-            print(f"Error modifying address: {e}")
-            return 
-        print("Address modified successfully")
-    # Function to delete an address by calling the delete_table_entry method from the PgManager class
-    # It takes the address_id as a parameter and removes the address from the address table
+        if user_id is None:
+            raise ValueError("User ID cannot be None")
+        self.pg_manager.add_table_entry(
+            self.table,
+            user_id=user_id,
+            street=street,
+            city=city,
+            country=country
+        )
+    # second, modify_address function that modifies an existing address
+    # It takes the address_id and any fields to modify
+    def modify_address(self, address_id, **fields):
+        self.pg_manager.edit_table_entry(self.table, address_id, **fields)
+    # third, delete_address function that deletes an address from the database
+    # It takes the address_id as a parameter
     def delete_address(self, address_id):
-        try:
-            self.pg_manager.delete_table_entry(
-                schema_name = "lyfter_week6",
-                table_name = "address",
-                entry_id = address_id
-            )
-        except Exception as e:
-            print(f"Error deleting address: {e}")
-            return 
-        print("Address deleted successfully")
-    # Function to check all addresses by retrieving and printing all addresses from the address table
-    # It uses the get_table_entries method from the PgManager class
-    def get_all_addresses(self):
-        try:
-            addresses = self.pg_manager.get_table_entries(
-                schema_name = "lyfter_week6",
-                table_name = "address"
-            )
-            if not addresses:
-                print("No addresses found.")
-                return
-            for address in addresses:
-                print(address)
-        except Exception as e:
-            print(f"Error retrieving addresses: {e}")
-            return
+        self.pg_manager.delete_table_entry(self.table, address_id)
+    # Finally, list_addresses function that retrieves and prints all addresses from the database
+    def list_addresses(self):
+        for row in self.pg_manager.get_table_entries(self.table):
+            print(row)
