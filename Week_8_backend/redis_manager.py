@@ -11,11 +11,11 @@ class Cache_Manager:
     # First, the constructor initializes the Redis client with the connection details
     def __init__(self):
         self._client = redis.Redis(
-            host='', # Insert your own Redis server host here
-            port=4444, # Insert your own Redis server port here
-            decode_responses=True, 
-            username="default", # Insert your own Redis server username here
-            password="" # Insert your own Redis server password here
+        host='',
+        port=0,
+        decode_responses=True,
+        username="default",
+        password="",
         )
         
         self._ttl = int(os.getenv("CACHE_TTL", "300"))

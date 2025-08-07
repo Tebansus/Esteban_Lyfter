@@ -37,7 +37,7 @@ invoice_table = Table(
 
 class DB_Manager:
     def __init__(self):
-        self.engine = create_engine('') # Insert your own database connection string here
+        self.engine = create_engine('')
         metadata_obj.create_all(self.engine)
     # CRUD operations for users, first we need to insert a user
     # this method will return the id of the inserted user
