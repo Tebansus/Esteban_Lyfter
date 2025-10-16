@@ -1,0 +1,218 @@
+
+/* 1. Design System & Custom Properties */
+
+
+:root {
+    /* Colors */
+    --color-text-primary: #303030;
+    --color-text-muted: #6f6f6f;
+    --color-background-body: #ffffff;
+    --color-background-disclaimer: #f7f7f7;
+    --color-accent-cta-bg: #fcbb76; 
+    --color-accent-button-bg: #303030;
+    --color-accent-button-text: #ffffff;
+
+    /* Typography */
+    --font-family-sans: 'Inter', sans-serif;
+    --font-family-serif: 'Lora', serif;
+    --fs-h1: 3rem; 
+    --fs-subtitle: 1.5rem; 
+    --fs-body: 1.125rem; 
+    --fs-cta-title: 1.25rem; 
+    --fs-disclaimer: 0.875rem; 
+    --fw-regular: 400;
+    --fw-bold: 700;
+    --lh-heading: 1.2;
+    --lh-body: 1.7;
+
+    /* Spacing  */
+    --max-width-container: 48rem; 
+    --spacing-unit: 0.5rem; 
+
+    /* Borders */
+    --border-radius-image: 1rem; 
+    --border-radius-cta: 0.5rem; 
+    --border-radius-disclaimer: 0.5rem;
+}
+
+
+/* 2. Global Styles & Resets */
+
+
+/* Css reset */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+/* Body styles */
+body {
+    font-family: var(--font-family-sans);
+    color: var(--color-text-primary);
+    background-color: var(--color-background-body);
+    line-height: var(--lh-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+
+/* 3. Layout & Container */
+
+
+.blog-post {
+    max-width: var(--max-width-container);
+    margin: 3rem auto; 
+    padding: 0 1.5rem; 
+}
+
+
+/* 4. Component Styles */
+
+
+/* Header and Typography */
+.post-header {
+    margin-bottom: 2rem; 
+    text-align: center;
+}
+
+.post-header h1 {
+    font-size: var(--fs-h1);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-heading);
+    margin-bottom: 1rem; 
+}
+
+/* Subtitle selector and serif font */
+.subtitle {
+    font-family: var(--font-family-serif);
+    font-size: var(--fs-subtitle);
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    margin-bottom: 1.5rem; 
+}
+
+/* Social Links and container for author information */
+.byline-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem; 
+    color: var(--color-text-muted);
+    font-size: 0.875rem; 
+}
+
+.social-links {
+    list-style: none;
+    display: flex;
+    gap: 1rem; 
+}
+
+.social-links a {
+    color: var(--color-text-muted);
+    transition: opacity 0.2s ease-in-out;
+}
+/* Hover effect for social links */
+.social-links a:hover {
+    opacity: 0.7;
+}
+/* removes any extra space below the SVG */
+.social-links svg {
+    display: block; 
+}
+
+/* Hero Image and Disclaimer */
+.post-image-container {
+    margin-bottom: 1rem; 
+}
+
+.post-image-container img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--border-radius-image);
+}
+
+/*  Added styles for grey box */
+.image-disclaimer {
+    font-size: var(--fs-disclaimer);
+    color: var(--color-text-muted);
+    font-style: italic;
+    text-align: center;
+    line-height: 1.6;
+    margin-bottom: 2rem; 
+    background-color: var(--color-background-disclaimer);
+    padding: 1rem; 
+    border-radius: var(--border-radius-disclaimer);
+}
+
+.image-disclaimer a {
+    color: var(--color-text-muted);
+    text-decoration: underline;
+}
+
+/* Main Content and Paragraphs styles */
+.post-content p {
+    font-size: var(--fs-body);
+    margin-bottom: 1.5rem; 
+}
+
+/* call to action box */
+.cta-box {
+    background-color: var(--color-accent-cta-bg);
+    border-radius: var(--border-radius-cta);
+    padding: 1.5rem; 
+    margin-left: 2rem; 
+    margin-bottom: 1.5rem; 
+    float: right;
+    width: 40%;
+    max-width: 18.75rem; 
+    text-align: center;
+}
+
+/* Used a space as a selector */
+.cta-box .cta-title {
+    font-size: var(--fs-cta-title);
+    font-weight: var(--fw-bold);
+    line-height: 1.4;
+    margin-bottom: 1rem; 
+}
+
+/* Used a space as a selector */
+.cta-box .cta-button {
+    display: inline-block;
+    background-color: var(--color-accent-button-bg);
+    color: var(--color-accent-button-text);
+    font-weight: var(--fw-bold);
+    text-decoration: none;
+    padding: 0.75rem 1.5rem; 
+    border-radius: 0.25rem; 
+    transition: background-color 0.2s ease-in-out;
+}
+
+.cta-box .cta-button:hover {
+    background-color: #555555; 
+}
+
+
+/* 5. Feel enhancements */
+
+/* Media Queries */
+@media (max-width: 48rem) { 
+    .post-header h1 {
+        font-size: 2.25rem; 
+    }
+
+    .subtitle {
+        font-size: 1.25rem; 
+    }
+
+    .cta-box {
+        float: none;
+        width: 100%;
+        max-width: none;
+        margin-left: 0;
+        margin-top: 1rem; 
+    }
+}

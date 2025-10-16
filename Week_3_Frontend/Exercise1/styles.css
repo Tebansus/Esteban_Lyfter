@@ -1,0 +1,152 @@
+
+/* Body styling definitions */
+body {
+    background-color: #5165f1;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 1.25rem; 
+    box-sizing: border-box;
+}
+/* Form wrapper styling definitions */
+.form-wrapper {
+    background-color: #ffffff;
+    padding: 2.5rem; 
+    border-radius: 1rem; 
+    box-shadow: 0 0.625rem 2.5rem rgba(0, 0, 0, 0.1); 
+    width: 100%;
+    max-width: 30rem; 
+    box-sizing: border-box;
+}
+/* Decorative line styling definitions */
+.form-wrapper .decorator-line {
+    width: 2.5rem; 
+    height: 0.25rem; 
+    background-color: #5165f1;
+    border-radius: 0.125rem; 
+    margin-bottom: 1.5rem; 
+}
+/* Heading and paragraph styling definitions */
+h1 {
+    font-size: 2rem; 
+    margin: 0 0 0.5rem 0; 
+    color: #1a202c;
+    font-weight: 700;
+}
+
+p {
+    color: #718096;
+    margin: 0 0 2rem 0; 
+    font-size: 1rem; 
+}
+/* Form element styling definitions */
+input[type="text"],
+input[type="email"],
+textarea,
+.select-wrapper select {
+    width: 100%;
+    padding: 1rem; 
+    margin-bottom: 1rem; 
+    border: 1px solid #e2e8f0; 
+    border-radius: 0.5rem; 
+    background-color: #f7fafc;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
+    color: #2d3748;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+/* Focus state styling definitions */
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: #5165f1;
+    box-shadow: 0 0 0 3px rgba(81, 101, 241, 0.2);
+}
+/* Placeholder text styling definitions */
+::placeholder {
+    color: #a0aec0;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 7.5rem; 
+}
+
+input[type="email"] {
+    /* SVG for email icon gotten from heroicons as the SVG data */
+    /* Encoding done using https://yoksel.github.io/url-encoder/ */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23A0AEC0'%3e%3cpath d='M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z'/%3e%3cpath d='M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.25rem;
+    padding-right: 3.125rem;
+}
+
+.select-wrapper {
+    position: relative;
+}
+
+.select-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 1rem; 
+    transform: translateY(-50%);
+    width: 1.25rem; 
+    height: 1.25rem;
+    /* Arrow icon gotten from hero icons as the SVG data*/
+    /* Encoding done using https://yoksel.github.io/url-encoder/ */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23A0AEC0'%3e%3cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center;
+    pointer-events: none;
+}
+
+.select-wrapper select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: 3.125rem; 
+}
+
+select:invalid {
+   color: #a0aec0;
+}
+/* Submit button styling definitions for the form */
+button[type="submit"] {
+    width: 100%;
+    padding: 1rem; 
+    margin-top: 1rem; 
+    background-color: #5165f1;
+    color: white;
+    border: none;
+    border-radius: 0.5rem; 
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+/* Hover state styling definitions for the submit button */
+button[type="submit"]:hover {
+    background-color: #4355d4;
+}
+/* Footer styling definitions */
+.footer {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: #a0aec0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.footer img {
+    height: 1.25rem;
+}
