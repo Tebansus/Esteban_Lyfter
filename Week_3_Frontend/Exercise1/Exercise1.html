@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us Form</title>    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="form-wrapper">
+        <form action="https://dummyjson.com/test" method="POST">
+            <div class="decorator-line"></div>
+            <h1>Contact us!</h1>
+            <p>Got something to say? Fire away!</p>
+
+            <input type="text" id="first_name" name="firstName" placeholder="First name *" required />
+            
+            <input type="text" id="last_name" name="lastName" placeholder="Last name *" required />
+            
+            <input type="email" id="email" name="email" placeholder="Email address *" required />
+
+            <div class="select-wrapper">
+                <select name="type" id="type" required>
+                    <option value="" disabled selected hidden>What's your message about? *</option>
+                    <option value="question">Question</option>
+                    <option value="suggestion">Suggestion</option>
+                </select>
+            </div>
+            
+            <textarea id="message" name="message" placeholder="Fire away! *" required></textarea>
+            
+            <button type="submit">Send my message</button>
+        </form>
+
+        <div class="footer">
+            <span>Powered by</span>
+            
+            <span>NetHunt CRM</span>
+        </div>
+    </div>
+
+</body>
+</html>

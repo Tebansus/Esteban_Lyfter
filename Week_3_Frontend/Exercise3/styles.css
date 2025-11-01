@@ -1,0 +1,348 @@
+/*  Fonts, gotten from the Billboard website by using inspect element */
+@font-face {
+    font-family: 'Crystal Extra Bold';
+    src: url('https://www.billboard.com/wp-content/themes/vip/pmc-billboard-2021/assets/public/Crystal-ExtraBold.woff2') format('woff2');
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Crystal Ultra Condensed Bold';
+    src: url('https://www.billboard.com/wp-content/themes/vip/pmc-billboard-2021/assets/public/Crystal-UltraCondensedBold.woff2') format('woff2');
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+}
+/*  Colors, gotten from the Billboard website by using inspect element */
+:root {
+    --billboard-green: #00ff9a;
+    --billboard-dark-grey: #1a1a1a;
+    --billboard-light-grey: #f5f5f5;
+    --billboard-text-grey: #8d8d8d;
+    --billboard-white: #ffffff;
+    --billboard-black: #000000;
+    --font-title: 'Crystal Ultra Condensed Bold', sans-serif;
+    --font-primary: 'Crystal Extra Bold', sans-serif;
+    --font-secondary: 'Roboto', sans-serif;
+    --font-accent: 'Azeret Mono', monospace;
+}
+/* 1. Global Styles & Resets */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: var(--billboard-light-grey);
+    padding: 2rem;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Main Container */
+.chart-container {
+    max-width: 900px;
+    margin: auto;
+    background-color: var(--billboard-light-grey);
+}
+
+/* Header for the chart */
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+}
+
+.header-title-group {
+    font-family: var(--font-primary);
+}
+/* Main Title with billboard styles */
+.main-title {
+    font-family: var(--font-title);
+    font-size: 4.3rem;
+    letter-spacing: .086rem;
+    color: var(--billboard-black);
+    margin: 0;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.main-title sup {
+    font-size: 1rem;
+    top: -2em;
+}
+/* subtitle for the chart week designation */
+.chart-week {
+    font-family: var(--font-accent);
+    border: 1px solid var(--billboard-black);
+    padding: 0.6rem 1rem 0.5rem 1rem;
+    font-size: 0.75rem;
+    letter-spacing: .083rem;
+    display: inline-block;
+    margin-top: 1.25rem;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.header-icons {
+    display: flex;
+    gap: 0.5rem;
+}
+/* Icon Button Styles for buttons on the top right */
+.icon-btn {
+    background-color: var(--billboard-black);
+    color: var(--billboard-white);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}
+/* SVG Icons inside the buttons */
+.icon-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+/*Chart list styles */
+.chart-list {
+    list-style: none;
+}
+
+/* Chart item row */
+.chart-item {
+    display: flex;
+    align-items: center;
+    background-color: var(--billboard-white);
+    border-radius: 6px;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem;
+    gap: 1rem;
+}
+
+/* Formating for rank number */
+.rank-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 3.75rem;
+    height: 3.75rem;
+    font-size: 1.5rem;
+}
+
+.rank-box.special {
+    background-color: var(--billboard-green);
+}
+
+/* Container for album art */
+.album-art-container {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+}
+
+.album-art-container.special {
+    width: 12.5rem; 
+    height: 12.5rem; 
+    border-left: 5px solid var(--billboard-green);
+}
+
+.album-art {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Special styling for the #1 song, "golden" in this case */
+.chart-item.special-golden {
+    padding: 0;
+    gap: 0;
+}
+/* Adjustments for the special #1 item */
+.chart-item.special-golden .rank-box {
+    height: 3.75rem; 
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+/* Adjustments for the special #1 item */
+.chart-item.special-golden .song-details {
+    padding-left: 1rem;
+}
+
+/* Song Details */
+.song-details {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    gap: 1rem;
+}
+/* Status Icon and New Tag */
+.status-icon {
+    flex-shrink: 0;
+    width: 3.125rem; /* 50px */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status-icon svg {
+    width: 15px;
+    height: 15px;
+    fill: var(--billboard-text-grey);
+}
+
+.new-tag {
+    background-color: var(--billboard-green);
+    color: var(--billboard-black);
+    font-size: 0.6rem;
+    font-weight: bold;
+    padding: 0.3rem;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    letter-spacing: 1px;
+}
+/* Star icon for songs that have it */
+.star-icon {
+    border: 1px solid var(--billboard-black);
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.star-icon svg {
+    width: 15px;
+    height: 15px;
+    fill: var(--billboard-black);
+}
+
+.song-info {
+    flex-grow: 1;
+}
+/* Song Title and Artist */
+.song-title {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+    display: box;
+    line-clamp: 2;
+    box-orient: vertical;
+    overflow: hidden;
+}
+
+.song-artist {
+    font-family: var(--font-secondary);
+    font-size: 0.9rem;
+    color: var(--billboard-black);
+}
+
+/*Stats for how long the song has been on the chart*/
+.stats-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-shrink: 0;
+}
+/*Stats for how long the song has been on the chart*/
+.song-stats {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.2rem 0.5rem;
+    font-family: var(--font-secondary);
+    font-size: 0.75rem;
+    color: var(--billboard-text-grey);
+    width: 5rem;
+}
+
+.stat-group {
+    display: contents;
+}
+
+.stat-label {
+    text-align: right;
+}
+/*Stats for how long the song has been on the chart*/
+.stat-value {
+    font-family: var(--font-primary);
+    color: var(--billboard-black);
+    font-weight: 800;
+    text-align: right;
+    min-width: 30px;
+}
+
+/* Plus button on the side for more info */
+.plus-btn {
+    width: 3.875rem; /* 62px */
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.plus-icon {
+    content: "+";
+    width: 1.5rem;
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--billboard-text-grey);
+    border-radius: 50%;
+    color: var(--billboard-text-grey);
+    font-size: 1.2rem;
+    line-height: 1.2rem;
+    cursor: pointer;
+}
+
+/* Adjustments for  viewing on small screens */
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+    .chart-header {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+        text-align: center;
+    }
+    .main-title {
+        font-size: 2.7rem;
+    }
+    .chart-item {
+        flex-wrap: wrap;
+        padding: 0.5rem;
+        position: relative;
+    }
+    .album-art-container.special {
+        width: 80px;
+        border-left: none;
+    }
+    .song-details {
+        width: 100%;
+        order: 3;
+        padding: 0.5rem 0;
+        gap: 0.5rem;
+    }
+    .stats-wrapper {
+        display: none; /* Hiding detailed stats on mobile for simplicity, matching original layout pattern */
+    }
+    .status-icon {
+        display: none;
+    }
+    .plus-btn {
+        position: absolute;
+        top: 1.5rem;
+        right: 0.5rem;
+    }
+}
