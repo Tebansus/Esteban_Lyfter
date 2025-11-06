@@ -224,6 +224,8 @@ header nav {
   width: 100%;
   display: block;
   transition: transform 0.3s ease;
+  height: 25rem; 
+  object-fit: cover;
 }
 
 .product-card:hover.product-image img {
