@@ -1,0 +1,16 @@
+<html>
+<div>
+  <button id='Print Text'>Print Text</button>
+  <input type="text" id="text-input" placeholder="Enter some text"/>
+  <div id="user-input"></div>
+</div>
+<script>
+    const printButton = document.getElementById('Print Text');
+    const textInput = document.getElementById('text-input');
+    const userInputDiv = document.getElementById('user-input');
+    printButton.addEventListener('click', () => {
+        userInputDiv.textContent = textInput.value;
+        textInput.value = '';
+    });
+</script>
+</html>
