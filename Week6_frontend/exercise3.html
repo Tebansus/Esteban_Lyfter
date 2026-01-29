@@ -1,0 +1,39 @@
+<html>
+<div>
+    <form id="user-form">
+        <label for="name-input">Name:</label>
+        <input type="text" id="name-input" placeholder="Enter your name" required />
+        <label for="last-name-input">Last Name:</label>
+        <input type="text" id="last-name-input" placeholder="Enter your last name" required />
+        <label for="email-input">Email:</label>
+        <input type="email" id="email-input" placeholder="Enter your email" required />
+        <label for="password-input">Password:</label>
+        <input type="password" id="password-input" placeholder="Enter your password" required />
+        <label for="Employee_status">Are you an employee?:</label>
+        <label for="Yes_employee">Yes</label>
+        <input type="radio" id="Yes_employee" name="Employee_status" value="Yes">
+        <label for="No_employee">No</label>
+        <input type="radio" id="No_employee" name="Employee_status" value="No" checked>
+        <label for="Job Name">Job Name</label>
+        <input type="text" id="job-name" placeholder="Enter your job name" />
+    </form>
+</div>
+<script>
+        const yesEmployeeRadio = document.getElementById('Yes_employee');
+        const noEmployeeRadio = document.getElementById('No_employee');
+        const jobNameInput = document.getElementById('job-name');
+        const jobNameLabel = document.querySelector('label[for="Job Name"]');
+        function toggleJobNameInput() {
+            if (yesEmployeeRadio.checked) {
+                jobNameInput.style.display = 'inline-block';
+                jobNameLabel.style.display = 'inline-block';
+            } else {
+                jobNameInput.style.display = 'none';
+                jobNameLabel.style.display = 'none';
+            }
+        }
+        yesEmployeeRadio.addEventListener('change', toggleJobNameInput);
+        noEmployeeRadio.addEventListener('change', toggleJobNameInput);      
+        toggleJobNameInput();
+</script>
+        

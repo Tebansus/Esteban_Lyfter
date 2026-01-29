@@ -1,0 +1,23 @@
+<div>
+  <button id='add-button'>Click me!</button>
+  <button id='remove-button'>Clear list</button>  
+</div>
+<script>
+    const addButton = document.getElementById('add-button');
+    const removeButton = document.getElementById('remove-button');
+    const listItems = [];
+    addButton.addEventListener('click', () => {
+        const listItem = document.createElement('div');
+        listItem.textContent = `Item ${listItems.length + 1}`;
+        listItems.push(listItem);
+        document.body.appendChild(listItem);
+    });
+    removeButton.addEventListener('click', () => {
+        listItems.forEach(item => {
+            document.body.removeChild(item);
+        });
+        listItems.length = 0; // Clear the array
+    });
+</script>
+
+
