@@ -1,0 +1,74 @@
+<html >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Async/Await User Fetcher</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .container {
+            border: 1px solid #ccc;
+            padding: 20px;
+            max-width: 400px;
+            border-radius: 8px;
+        }
+        input { padding: 8px; margin-right: 10px; }
+        button { padding: 8px 15px; cursor: pointer; }
+        #result { margin-top: 20px; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h3>User Search</h3>
+        <input type="text" id="userInput" placeholder="Enter User ID, like 2">
+        <button id="fetchBtn">Get User</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        
+        const inputField = document.getElementById('userInput');
+        const button = document.getElementById('fetchBtn');
+        const resultDiv = document.getElementById('result');
+
+      
+        const BASE_URL = 'https://reqres.in/api/users/';
+
+           button.addEventListener('click', async () => {
+            const inputValue = inputField.value.trim();
+
+            
+            if (!inputValue) {
+                resultDiv.innerHTML = '<p class="error">Please enter a value.</p>';
+                return;
+            }
+
+          
+            
+
+            try {              
+                const response = await fetch(`${BASE_URL}${inputValue}`);
+              
+                if (!response.ok) {
+                    throw new Error(`User not found (Status: ${response.status})`);
+                }             
+                const data = await response.json();               
+                const user = data.data || data;               
+                resultDiv.innerHTML = `
+                    <div class="success">
+                        <p><strong>Name:</strong> ${user.first_name} ${user.last_name}</p>
+                        <p><strong>Email:</strong> ${user.email}</p>
+                    </div>
+                `;
+
+            } catch (error) {             
+                console.error(error);
+                resultDiv.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
