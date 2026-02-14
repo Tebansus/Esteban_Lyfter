@@ -1,0 +1,56 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Changer</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+        }
+        p {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="colorBtn">Change Color</button>
+    
+    <p id="textBlock">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus mauris lacus, gravida a molestie eget, pharetra et ligula. Praesent iaculis quis nisl a mollis. Donec condimentum turpis tellus, ac condimentum nisi consequat vitae. Nulla est urna, mollis eu pulvinar ac, finibus ut enim. Mauris eget purus eu quam dignissim sagittis sed vel ligula. Mauris venenatis magna sit amet augue accumsan feugiat. Cras venenatis sapien malesuada massa porttitor ultrices.
+    </p>
+
+    <script>
+        // Define colors
+        const colors = ['red', 'blue', 'green', 'yellow', 'cyan', 'pink'];
+        // Select the elements
+        const button = document.getElementById('colorBtn');
+        const paragraph = document.getElementById('textBlock');
+        // Execute callback
+        function pickRandomColor(onColorChosen) {
+            const randomNumber = Math.floor(Math.random() * colors.length);
+            const selectedColor = colors[randomNumber];        
+            onColorChosen(selectedColor);
+        }
+        // Callback function
+        function applyBackground(color) {
+            paragraph.style.backgroundColor = color;
+            console.log("Background changed to: " + color);
+        }
+        // Event listener
+        button.addEventListener('click', function() {
+            pickRandomColor(applyBackground);
+        });
+    </script>
+
+</body>
+</html>
