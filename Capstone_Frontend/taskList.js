@@ -35,7 +35,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 });
 async function syncUserFromAPI() {
     try {
-        const response = await axios.get(`${API_LINK}/${currentUser.id}`);
+        const response = await axios.get(`${API_LINK}/${currentUser.id}?_t=${Date.now()}`);
         const apiUser = response.data;
 
         if (!apiUser.data) apiUser.data = {};

@@ -29,7 +29,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 });
 
 async function  loginUser(userId, password) {
-    const response = await axios.get(`https://corsproxy.io/?https://api.restful-api.dev/objects/${userId}`);
+    const response = await axios.get(`https://corsproxy.io/?https://api.restful-api.dev/objects/${userId}?_t=${Date.now()}`);
     const userData = response.data;
     if (userData.data && userData.data.password === password) {
         return userData;
