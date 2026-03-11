@@ -1,0 +1,35 @@
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Page</title>
+    <link rel="stylesheet" href="registerPage.css">
+</head>
+<body>
+
+    <main class="auth-wrapper">
+        <h1>Register</h1>
+        
+        <form class="auth-form" id="registerForm">
+            <input type="text" class="styled-input" id="name" placeholder="Name..." required>
+            <input type="email" class="styled-input" id="email" placeholder="Email..." required>
+            <input type="password" class="styled-input" id="password" placeholder="Password..." required>
+            <input type="address" class="styled-input" id="address" placeholder="Address..." required>
+            <button type="submit" class="submit-btn">Create Account</button>
+            
+            <div class="auth-link">
+                <a href="loginPage.html">Already have an account? Log in here</a>
+            </div>
+        </form>
+    </main>
+<script type="importmap">
+        {
+            "imports": {
+                "axios": "https://cdn.jsdelivr.net/npm/axios@1.6.7/+esm"
+            }
+        }
+    </script>
+    <script type="module" src="registerPage.js"></script>
+</body>
+</html>
