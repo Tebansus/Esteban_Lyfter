@@ -1,0 +1,63 @@
+:root {
+  --primary-color: #7F55E0; 
+  --primary-color-alt: #636AE8; 
+  --text-main: #1A1A1A;
+  --text-muted: #5F5F5F;
+  --border-color: #E1E1E1;
+  --bg-color: #FFFFFF;
+  --bg-muted: #f3f4f6;
+  
+  --font-inter: 'Inter', sans-serif;
+  --font-poppins: 'Poppins', sans-serif;
+  --font-archivo: 'Archivo', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-inter);
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex-grow: 1;
+  width: 100%;
+  max-width: 90rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  position: relative;
+}
+
+
+.btn-primary {
+  background-color: var(--primary-color-alt);
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  padding: 0.625rem 1rem;
+  font-family: var(--font-inter);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
