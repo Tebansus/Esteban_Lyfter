@@ -1,0 +1,131 @@
+.detail-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  padding: 2.5rem 0;
+}
+
+.detail-container.empty {
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.detail-card {
+  display: flex;
+  gap: 2rem;
+  width: 100%;
+  max-width: 75rem;
+  background-color: var(--bg-color);
+  border-radius: 0.375rem;
+  box-shadow: 0 0.125rem 0.3125rem 0 rgba(23, 26, 31, 0.09);
+  border: 0.0625rem solid var(--border-color);
+  overflow: hidden;
+  align-items: stretch;
+}
+
+.detail-image-section {
+  flex: 1;
+  min-width: 25rem;
+  max-width: 37.5rem;
+  padding: 1.5rem;
+}
+
+.detail-image {
+  width: 100%;
+  height: 37.5rem;
+  object-fit: cover;
+  border-radius: 0.375rem;
+}
+
+.detail-image-placeholder {
+  width: 100%;
+  height: 37.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  border-radius: 0.375rem;
+  color: #888;
+  font-style: italic;
+}
+
+.detail-info-section {
+  flex: 1;
+  padding: 1.5rem 1.5rem 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-name {
+  font-family: var(--font-archivo);
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #171a1f;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.detail-price {
+  font-family: var(--font-archivo);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #171a1f;
+  margin-bottom: 1rem;
+}
+
+.detail-category {
+  font-family: var(--font-inter);
+  font-size: 0.875rem;
+  color: #565e6c;
+  margin-bottom: 1.5rem;
+}
+
+.detail-description {
+  font-family: var(--font-inter);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #171a1f;
+  margin-bottom: 2.5rem;
+}
+
+.detail-actions {
+  margin-top: auto;
+}
+
+.detail-info-text {
+  font-family: var(--font-inter);
+  font-size: 0.875rem;
+  color: #565e6c;
+  font-style: italic;
+  margin-bottom: 1.5rem;
+}
+
+.detail-button {
+  min-width: 9.5rem;
+  height: 2.5rem;
+}
+
+/* Responsive adjustment for detail card */
+@media (max-width: 56.25rem) {
+  .detail-card {
+    flex-direction: column;
+  }
+  
+  .detail-image-section {
+    min-width: unset;
+    max-width: 100%;
+    padding: 1.5rem;
+  }
+  
+  .detail-image,
+  .detail-image-placeholder {
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+  
+  .detail-info-section {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+  }
+}
