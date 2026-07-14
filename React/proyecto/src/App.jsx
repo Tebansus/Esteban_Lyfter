@@ -1,53 +1,31 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import Home from './components/Home';
-import Catalog from './components/Catalog';
-import ProductDetail from './components/ProductDetail';
-import Administration from './components/Administration';
-import EditProduct from './components/EditProduct';
+import Home from './pages/Home';
+import Catalog from './pages/Catalog';
+import ProductDetail from './pages/ProductDetail';
+import Administration from './pages/Administration';
+import EditProduct from './pages/EditProduct';
+import { useProducts } from './hooks/useProducts';
 import './App.css';
 
 function App() {
-  const [currentView, setCurrentView] = useState('home'); // 'home', 'catalog', 'detail'
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [productsData, setProductsData] = useState([]);
+  const [currentView, setCurrentView] = useState('home'); // 'home', 'catalog', 'detail', 'admin', 'edit_product'
+  const [selectedProductId, setSelectedProductId] = useState(null);
+  const { products, addProduct, updateProduct, deleteProduct } = useProducts();
 
-  useEffect(() => {
-    import('./data/products.json')
-      .then((module) => {
-        const data = module.default || module;
-        setProductsData(Array.isArray(data) ? data : []);
-      })
-      .catch(() => {
-        setProductsData([]);
-      });
-  }, []);
+  // Se deriva siempre del catálogo a partir del id, evitando mantener una
+  // copia separada que haya que sincronizar a mano.
+  const selectedProduct = products.find(p => p.id === selectedProductId) || null;
 
   const navigateTo = (view, product = null) => {
     setCurrentView(view);
-    setSelectedProduct(product);
-    window.scrollTo(0, 0); 
-  };
-
-  const handleAddProduct = (newProduct) => {
-    const nextId = productsData.length > 0 ? Math.max(...productsData.map(p => p.id)) + 1 : 1;
-    const productWithId = { ...newProduct, id: nextId };
-    setProductsData([...productsData, productWithId]);
-  };
-
-  const handleDeleteProduct = (id) => {
-    setProductsData(productsData.filter(p => p.id !== id));
-    if (selectedProduct && selectedProduct.id === id) {
-      setSelectedProduct(null);
-    }
+    setSelectedProductId(product ? product.id : null);
+    window.scrollTo(0, 0);
   };
 
   const handleUpdateProduct = (updatedProduct) => {
-    setProductsData(productsData.map(p => p.id === updatedProduct.id ? updatedProduct : p));
-    if (selectedProduct && selectedProduct.id === updatedProduct.id) {
-      setSelectedProduct(updatedProduct);
-    }
+    updateProduct(updatedProduct);
     navigateTo('admin');
   };
 
@@ -56,24 +34,21 @@ function App() {
       <Header currentView={currentView} navigateTo={navigateTo} />
       <main className="main-content">
         {currentView === 'home' && <Home navigateTo={navigateTo} />}
-        {currentView === 'catalog' && <Catalog navigateTo={navigateTo} products={productsData} />}
+        {currentView === 'catalog' && <Catalog navigateTo={navigateTo} products={products} />}
         {currentView === 'detail' && (
-          <ProductDetail 
-            navigateTo={navigateTo} 
-            product={productsData.find(p => p.id === selectedProduct?.id)} 
-          />
+          <ProductDetail navigateTo={navigateTo} product={selectedProduct} />
         )}
         {currentView === 'admin' && (
-          <Administration 
-            products={productsData} 
+          <Administration
+            products={products}
             navigateTo={navigateTo}
-            onAddProduct={handleAddProduct}
-            onDeleteProduct={handleDeleteProduct}
+            onAddProduct={addProduct}
+            onDeleteProduct={deleteProduct}
           />
         )}
         {currentView === 'edit_product' && (
-          <EditProduct 
-            product={selectedProduct} 
+          <EditProduct
+            product={selectedProduct}
             navigateTo={navigateTo}
             onSave={handleUpdateProduct}
           />
