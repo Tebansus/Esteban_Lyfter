@@ -35,6 +35,12 @@ const Header = ({ currentView, navigateTo }) => {
           <button className="nav-link">
             Contacto
           </button>
+          <button 
+            className={`nav-link ${(currentView === 'admin' || currentView === 'edit_product') ? 'active' : ''}`}
+            onClick={() => navigateTo('admin')}
+          >
+            Administración
+          </button>
         </nav>
       </div>
     </header>

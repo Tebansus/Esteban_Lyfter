@@ -1,12 +1,5 @@
+import { formatPrice } from '../utils/formatPrice';
 import './Catalog.css';
-
-const formatPrice = (price) => {
-  return new Intl.NumberFormat('es-CR', {
-    style: 'currency',
-    currency: 'CRC',
-    minimumFractionDigits: 0
-  }).format(price);
-};
 
 const Catalog = ({ products, navigateTo }) => {
   if (!Array.isArray(products) || products.length === 0) {
