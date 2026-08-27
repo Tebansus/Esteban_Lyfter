@@ -1,37 +1,82 @@
 import { useState, useEffect } from 'react';
 
-// Hook personalizado que centraliza el estado del catálogo y las
-// operaciones para agregar, editar y eliminar productos.
+// URL del backend
+const API_URL = 'http://localhost:3001/api/products';
+
 export function useProducts() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    import('../data/products.json')
-      .then((module) => {
-        const data = module.default || module;
-        setProducts(Array.isArray(data) ? data : []);
-      })
-      .catch(() => {
-        setProducts([]);
-      });
+    fetchProducts();
   }, []);
 
-  const addProduct = (newProduct) => {
-    setProducts((current) => {
-      const nextId = current.length > 0 ? Math.max(...current.map(p => p.id)) + 1 : 1;
-      return [...current, { ...newProduct, id: nextId }];
-    });
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch(API_URL);
+      if (!response.ok) throw new Error('Error fetching products');
+      const data = await response.json();
+      setProducts(data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const updateProduct = (updatedProduct) => {
-    setProducts((current) =>
-      current.map(p => (p.id === updatedProduct.id ? updatedProduct : p))
-    );
+  const addProduct = async (newProduct) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify(newProduct)
+      });
+      if (response.ok) {
+        await fetchProducts();
+      }
+    } catch (error) {
+      console.error('Error adding product:', error);
+    }
   };
 
-  const deleteProduct = (id) => {
-    setProducts((current) => current.filter(p => p.id !== id));
+  const updateProduct = async (updatedProduct) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_URL}/${updatedProduct.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify(updatedProduct)
+      });
+      if (response.ok) {
+        setProducts(current =>
+          current.map(p => (p.id === updatedProduct.id ? updatedProduct : p))
+        );
+      }
+    } catch (error) {
+      console.error('Error updating product:', error);
+    }
   };
 
-  return { products, addProduct, updateProduct, deleteProduct };
+  const deleteProduct = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_URL}/${id}`, {
+        method: 'DELETE',
+        headers: {
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        }
+      });
+      if (response.ok) {
+        setProducts(current => current.filter(p => p.id !== id));
+      }
+    } catch (error) {
+      console.error('Error deleting product:', error);
+    }
+  };
+
+  return { products, addProduct, updateProduct, deleteProduct, fetchProducts };
 }

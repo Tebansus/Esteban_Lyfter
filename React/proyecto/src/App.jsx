@@ -6,16 +6,17 @@ import Catalog from './pages/Catalog';
 import ProductDetail from './pages/ProductDetail';
 import Administration from './pages/Administration';
 import EditProduct from './pages/EditProduct';
+import Login from './pages/Login';
+import Register from './pages/Register';
 import { useProducts } from './hooks/useProducts';
 import './App.css';
 
 function App() {
-  const [currentView, setCurrentView] = useState('home'); // 'home', 'catalog', 'detail', 'admin', 'edit_product'
+  const [currentView, setCurrentView] = useState('home'); // 'home', 'catalog', 'detail', 'admin', 'edit_product', 'login'
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const [user, setUser] = useState(null); // Estado para el usuario autenticado
   const { products, addProduct, updateProduct, deleteProduct } = useProducts();
 
-  // Se deriva siempre del catálogo a partir del id, evitando mantener una
-  // copia separada que haya que sincronizar a mano.
   const selectedProduct = products.find(p => p.id === selectedProductId) || null;
 
   const navigateTo = (view, product = null) => {
@@ -29,9 +30,24 @@ function App() {
     navigateTo('admin');
   };
 
+  const handleLogin = (userData) => {
+    setUser(userData);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setUser(null);
+    navigateTo('home');
+  };
+
   return (
     <div className="app-container">
-      <Header currentView={currentView} navigateTo={navigateTo} />
+      <Header 
+        currentView={currentView} 
+        navigateTo={navigateTo} 
+        user={user} 
+        onLogout={handleLogout} 
+      />
       <main className="main-content">
         {currentView === 'home' && <Home navigateTo={navigateTo} />}
         {currentView === 'catalog' && <Catalog navigateTo={navigateTo} products={products} />}
@@ -44,6 +60,7 @@ function App() {
             navigateTo={navigateTo}
             onAddProduct={addProduct}
             onDeleteProduct={deleteProduct}
+            user={user}
           />
         )}
         {currentView === 'edit_product' && (
@@ -51,7 +68,14 @@ function App() {
             product={selectedProduct}
             navigateTo={navigateTo}
             onSave={handleUpdateProduct}
+            user={user}
           />
+        )}
+        {currentView === 'login' && (
+          <Login navigateTo={navigateTo} onLogin={handleLogin} />
+        )}
+        {currentView === 'register' && (
+          <Register navigateTo={navigateTo} />
         )}
       </main>
       <Footer />

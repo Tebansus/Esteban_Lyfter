@@ -37,8 +37,8 @@ const ProductForm = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.nombre || !formData.descripcion || !formData.precio ||
-        !formData.categoria || !formData.imagen || !formData.stock) {
+    if (!formData.nombre || !formData.descripcion || formData.precio === '' ||
+        !formData.categoria || !formData.imagen || formData.stock === '') {
       setErrorMsg('Por favor completa todos los campos obligatorios.');
       return;
     }
