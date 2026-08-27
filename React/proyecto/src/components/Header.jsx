@@ -9,7 +9,7 @@ const PawIcon = () => (
   </svg>
 );
 
-const Header = ({ currentView, navigateTo }) => {
+const Header = ({ currentView, navigateTo, user, onLogout }) => {
   return (
     <header className="header">
       <div className="header-container">
@@ -19,29 +19,51 @@ const Header = ({ currentView, navigateTo }) => {
           </div>
           <span className="logo-text">PawStore</span>
         </div>
-        <nav className="header-nav">
-          <button 
-            className={`nav-link ${currentView === 'home' ? 'active' : ''}`}
-            onClick={() => navigateTo('home')}
-          >
-            Inicio
-          </button>
-          <button 
-            className={`nav-link ${(currentView === 'catalog' || currentView === 'detail') ? 'active' : ''}`}
-            onClick={() => navigateTo('catalog')}
-          >
-            Productos
-          </button>
-          <button className="nav-link">
-            Contacto
-          </button>
-          <button 
-            className={`nav-link ${(currentView === 'admin' || currentView === 'edit_product') ? 'active' : ''}`}
-            onClick={() => navigateTo('admin')}
-          >
-            Administración
-          </button>
-        </nav>
+        
+        <div className="header-right-group">
+          <nav className="header-nav">
+            <button 
+              className={`nav-link ${currentView === 'home' ? 'active' : ''}`}
+              onClick={() => navigateTo('home')}
+            >
+              Inicio
+            </button>
+            <button 
+              className={`nav-link ${(currentView === 'catalog' || currentView === 'detail') ? 'active' : ''}`}
+              onClick={() => navigateTo('catalog')}
+            >
+              Productos
+            </button>
+            <button className="nav-link">
+              Contacto
+            </button>
+            <button 
+              className={`nav-link ${(currentView === 'admin' || currentView === 'edit_product') ? 'active' : ''}`}
+              onClick={() => navigateTo('admin')}
+            >
+              Administración
+            </button>
+          </nav>
+          
+          <div className="auth-container">
+            {user ? (
+              <div className="user-info">
+                <span className="user-greeting">
+                  <span className="user-label">Usuario: </span>
+                  <span className="user-name">{user.name}</span>
+                </span>
+                <button className="logout-button" onClick={onLogout}>Cerrar sesión</button>
+              </div>
+            ) : (
+              <button 
+                className={`nav-link login-link ${currentView === 'login' ? 'active' : ''}`}
+                onClick={() => navigateTo('login')}
+              >
+                Iniciar sesión
+              </button>
+            )}
+          </div>
+        </div>
       </div>
     </header>
   );

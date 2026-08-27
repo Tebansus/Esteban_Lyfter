@@ -1,7 +1,19 @@
 import ProductForm from '../components/ProductForm';
 import './EditProduct.css';
 
-const EditProduct = ({ product, navigateTo, onSave }) => {
+const EditProduct = ({ product, navigateTo, onSave, user }) => {
+  if (!user || user.role !== 'admin') {
+    return (
+      <div className="unauthorized-page">
+        <div className="unauthorized-card">
+          <h2>Acceso no autorizado</h2>
+          <p>Esta sección está disponible únicamente para administradores.</p>
+          <button className="back-home-button" onClick={() => navigateTo('home')}>Volver al inicio</button>
+        </div>
+      </div>
+    );
+  }
+
   if (!product) {
     return (
       <div className="edit-container">
