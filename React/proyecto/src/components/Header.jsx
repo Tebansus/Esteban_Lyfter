@@ -49,7 +49,7 @@ const Header = ({ currentView, navigateTo, user, onLogout }) => {
             {user ? (
               <div className="user-info">
                 <span className="user-greeting">
-                  <span className="user-label">Usuario: </span>
+                  <span className="user-label">Sesión iniciada como: </span>
                   <span className="user-name">{user.name}</span>
                 </span>
                 <button className="logout-button" onClick={onLogout}>Cerrar sesión</button>

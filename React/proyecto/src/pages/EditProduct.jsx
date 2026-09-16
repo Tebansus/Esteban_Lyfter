@@ -7,7 +7,7 @@ const EditProduct = ({ product, navigateTo, onSave, user }) => {
       <div className="unauthorized-page">
         <div className="unauthorized-card">
           <h2>Acceso no autorizado</h2>
-          <p>Esta sección está disponible únicamente para administradores.</p>
+          <p>No tienes permiso para acceder a esta sección.</p>
           <button className="back-home-button" onClick={() => navigateTo('home')}>Volver al inicio</button>
         </div>
       </div>
