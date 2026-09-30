@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { GlobalContext } from '../context/GlobalContext';
 import './Login.css';
 
-export default function Login({ navigateTo, onLogin }) {
+export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const { login } = useContext(GlobalContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,13 +28,13 @@ export default function Login({ navigateTo, onLogin }) {
 
       const data = await response.json();
       localStorage.setItem('token', data.token);
-      onLogin(data.user);
+      login(data.user);
       
       // Redirect based on role
       if (data.user.role === 'admin') {
-        navigateTo('admin');
+        navigate('/admin');
       } else {
-        navigateTo('catalog');
+        navigate('/productos');
       }
 
     } catch (err) {
@@ -69,10 +73,10 @@ export default function Login({ navigateTo, onLogin }) {
         
         <button type="submit" className="login-button">Ingresar</button>
       </form>
-      <button type="button" className="back-button" onClick={() => navigateTo('home')}>Volver al inicio</button>
+      <button type="button" className="back-button" onClick={() => navigate('/')}>Volver al inicio</button>
       <div className="register-link-container" style={{ marginTop: '1rem', textAlign: 'center' }}>
         <span>¿No tienes cuenta? </span>
-        <button type="button" className="register-link" onClick={() => navigateTo('register')} style={{ background: 'none', border: 'none', color: '#007bff', cursor: 'pointer', textDecoration: 'underline' }}>
+        <button type="button" className="register-link" onClick={() => navigate('/registro')} style={{ background: 'none', border: 'none', color: '#007bff', cursor: 'pointer', textDecoration: 'underline' }}>
           Regístrate aquí
         </button>
       </div>

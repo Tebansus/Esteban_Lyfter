@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import './Login.css'; // We can reuse the login css or create a new one
+import { useNavigate } from 'react-router-dom';
+import './Login.css';
 
-export default function Register({ navigateTo }) {
+export default function Register() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,7 +34,7 @@ export default function Register({ navigateTo }) {
       }
 
       setSuccess('Cuenta creada exitosamente. Ahora puedes iniciar sesión.');
-      setTimeout(() => navigateTo('login'), 2000);
+      setTimeout(() => navigate('/login'), 2000);
 
     } catch (err) {
       setError('Error al intentar registrar. Por favor intenta más tarde.');
@@ -95,7 +97,7 @@ export default function Register({ navigateTo }) {
         
         <button type="submit" className="login-button">Crear cuenta</button>
       </form>
-      <button type="button" className="back-button" onClick={() => navigateTo('login')}>Volver a Iniciar sesión</button>
+      <button type="button" className="back-button" onClick={() => navigate('/login')}>Volver a Iniciar sesión</button>
     </div>
   );
 }

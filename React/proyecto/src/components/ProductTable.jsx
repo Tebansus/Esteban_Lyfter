@@ -1,7 +1,9 @@
+import { useNavigate } from 'react-router-dom';
 import { formatPrice } from '../utils/formatPrice';
 
 // Listado de productos en tabla, con acciones de editar y eliminar.
-const ProductTable = ({ products, navigateTo, onDeleteProduct }) => {
+const ProductTable = ({ products, onDeleteProduct }) => {
+  const navigate = useNavigate();
   return (
     <div className="admin-table-container">
       <table className="admin-table">
@@ -24,7 +26,7 @@ const ProductTable = ({ products, navigateTo, onDeleteProduct }) => {
               <td>{product.categoria}</td>
               <td>{product.stock}</td>
               <td className="admin-actions">
-                <button className="btn-edit" onClick={() => navigateTo('edit_product', product)}>Editar</button>
+                <button className="btn-edit" onClick={() => navigate(`/admin/editar/${product.id}`)}>Editar</button>
                 <button className="btn-delete" onClick={() => onDeleteProduct(product.id)}>Eliminar</button>
               </td>
             </tr>

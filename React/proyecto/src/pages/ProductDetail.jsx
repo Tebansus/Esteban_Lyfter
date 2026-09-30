@@ -1,12 +1,21 @@
+import { useNavigate, useParams } from 'react-router-dom';
+import { useContext } from 'react';
+import { GlobalContext } from '../context/GlobalContext';
 import { formatPrice } from '../utils/formatPrice';
 import './ProductDetail.css';
 
-const ProductDetail = ({ product, navigateTo }) => {
+const ProductDetail = ({ products }) => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { addToCart } = useContext(GlobalContext);
+
+  const product = products.find(p => p.id === parseInt(id));
+
   if (!product) {
     return (
       <div className="detail-container empty">
         <p>Producto no encontrado.</p>
-        <button className="btn-primary" onClick={() => navigateTo('catalog')}>Volver al catálogo</button>
+        <button className="btn-primary" onClick={() => navigate('/productos')}>Volver al catálogo</button>
       </div>
     );
   }
@@ -29,12 +38,16 @@ const ProductDetail = ({ product, navigateTo }) => {
           <p className="detail-description">{product.descripcion}</p>
           
           <div className="detail-actions">
-            <p className="detail-info-text">
-              Más adelante aquí se podrá agregar este producto al carrito y completar la compra.
-            </p>
             <button 
               className="btn-primary detail-button"
-              onClick={() => navigateTo('catalog')}
+              style={{ backgroundColor: '#28a745', borderColor: '#28a745' }}
+              onClick={() => addToCart({ id: product.id, name: product.nombre, price: product.precio, image_url: product.imagen })}
+            >
+              Agregar al carrito
+            </button>
+            <button 
+              className="btn-primary detail-button"
+              onClick={() => navigate('/productos')}
             >
               Volver al catálogo
             </button>

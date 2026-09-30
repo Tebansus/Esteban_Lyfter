@@ -1,15 +1,18 @@
+import { useNavigate } from 'react-router-dom';
 import ProductTable from '../components/ProductTable';
 import ProductForm from '../components/ProductForm';
 import './Administration.css';
 
-const Administration = ({ products, navigateTo, onAddProduct, onDeleteProduct, user }) => {
+const Administration = ({ products, onAddProduct, onDeleteProduct, user }) => {
+  const navigate = useNavigate();
+
   if (!user || user.role !== 'admin') {
     return (
       <div className="unauthorized-page">
         <div className="unauthorized-card">
           <h2>Acceso no autorizado</h2>
           <p>No tienes permiso para acceder a esta sección.</p>
-          <button className="back-home-button" onClick={() => navigateTo('home')}>Volver al inicio</button>
+          <button className="back-home-button" onClick={() => navigate('/')}>Volver al inicio</button>
         </div>
       </div>
     );
@@ -25,7 +28,6 @@ const Administration = ({ products, navigateTo, onAddProduct, onDeleteProduct, u
           <h2>Listado de Productos</h2>
           <ProductTable
             products={products}
-            navigateTo={navigateTo}
             onDeleteProduct={onDeleteProduct}
           />
         </div>

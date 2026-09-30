@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useContext } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -8,75 +9,62 @@ import Administration from './pages/Administration';
 import EditProduct from './pages/EditProduct';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
+import PurchaseConfirmation from './pages/PurchaseConfirmation';
+import NotFound from './pages/NotFound';
 import { useProducts } from './hooks/useProducts';
+import { GlobalContext } from './context/GlobalContext';
 import './App.css';
 
 function App() {
-  const [currentView, setCurrentView] = useState('home'); // 'home', 'catalog', 'detail', 'admin', 'edit_product', 'login'
-  const [selectedProductId, setSelectedProductId] = useState(null);
-  const [user, setUser] = useState(null); // Estado para el usuario autenticado
+  const { user, login, logout } = useContext(GlobalContext);
   const { products, addProduct, updateProduct, deleteProduct } = useProducts();
-
-  const selectedProduct = products.find(p => p.id === selectedProductId) || null;
-
-  const navigateTo = (view, product = null) => {
-    setCurrentView(view);
-    setSelectedProductId(product ? product.id : null);
-    window.scrollTo(0, 0);
-  };
+  const navigate = useNavigate();
 
   const handleUpdateProduct = (updatedProduct) => {
     updateProduct(updatedProduct);
-    navigateTo('admin');
-  };
-
-  const handleLogin = (userData) => {
-    setUser(userData);
+    navigate('/admin');
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    setUser(null);
-    navigateTo('home');
+    logout();
+    navigate('/');
   };
 
   return (
     <div className="app-container">
-      <Header 
-        currentView={currentView} 
-        navigateTo={navigateTo} 
-        user={user} 
-        onLogout={handleLogout} 
-      />
+      <Header user={user} onLogout={handleLogout} />
       <main className="main-content">
-        {currentView === 'home' && <Home navigateTo={navigateTo} />}
-        {currentView === 'catalog' && <Catalog navigateTo={navigateTo} products={products} />}
-        {currentView === 'detail' && (
-          <ProductDetail navigateTo={navigateTo} product={selectedProduct} />
-        )}
-        {currentView === 'admin' && (
-          <Administration
-            products={products}
-            navigateTo={navigateTo}
-            onAddProduct={addProduct}
-            onDeleteProduct={deleteProduct}
-            user={user}
-          />
-        )}
-        {currentView === 'edit_product' && (
-          <EditProduct
-            product={selectedProduct}
-            navigateTo={navigateTo}
-            onSave={handleUpdateProduct}
-            user={user}
-          />
-        )}
-        {currentView === 'login' && (
-          <Login navigateTo={navigateTo} onLogin={handleLogin} />
-        )}
-        {currentView === 'register' && (
-          <Register navigateTo={navigateTo} />
-        )}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/productos" element={<Catalog products={products} />} />
+          <Route path="/productos/:id" element={<ProductDetail products={products} />} />
+          <Route path="/carrito" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/confirmacion" element={<PurchaseConfirmation />} />
+          
+          <Route path="/admin" element={
+            <Administration
+              products={products}
+              onAddProduct={addProduct}
+              onDeleteProduct={deleteProduct}
+              user={user}
+            />
+          } />
+          <Route path="/admin/editar/:id" element={
+            <EditProduct
+              products={products}
+              onSave={handleUpdateProduct}
+              user={user}
+            />
+          } />
+          
+          <Route path="/login" element={<Login onLogin={(u) => { login(u); navigate(-1); }} />} />
+          <Route path="/registro" element={<Register />} />
+          
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </main>
       <Footer />
     </div>

@@ -1,3 +1,6 @@
+import { useContext } from 'react';
+import { Link, NavLink } from 'react-router-dom';
+import { GlobalContext } from '../context/GlobalContext';
 import './Header.css';
 
 const PawIcon = () => (
@@ -9,40 +12,33 @@ const PawIcon = () => (
   </svg>
 );
 
-const Header = ({ currentView, navigateTo, user, onLogout }) => {
+const Header = ({ user, onLogout }) => {
+  const { getCartCount } = useContext(GlobalContext);
+
   return (
     <header className="header">
       <div className="header-container">
-        <div className="logo-container" onClick={() => navigateTo('home')}>
+        <Link to="/" className="logo-container">
           <div className="logo-icon-bg">
             <PawIcon />
           </div>
           <span className="logo-text">PawStore</span>
-        </div>
+        </Link>
         
         <div className="header-right-group">
           <nav className="header-nav">
-            <button 
-              className={`nav-link ${currentView === 'home' ? 'active' : ''}`}
-              onClick={() => navigateTo('home')}
-            >
+            <NavLink to="/" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
               Inicio
-            </button>
-            <button 
-              className={`nav-link ${(currentView === 'catalog' || currentView === 'detail') ? 'active' : ''}`}
-              onClick={() => navigateTo('catalog')}
-            >
+            </NavLink>
+            <NavLink to="/productos" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
               Productos
-            </button>
-            <button className="nav-link">
-              Contacto
-            </button>
-            <button 
-              className={`nav-link ${(currentView === 'admin' || currentView === 'edit_product') ? 'active' : ''}`}
-              onClick={() => navigateTo('admin')}
-            >
+            </NavLink>
+            <NavLink to="/carrito" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+              Carrito ({getCartCount()})
+            </NavLink>
+            <NavLink to="/admin" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
               Administración
-            </button>
+            </NavLink>
           </nav>
           
           <div className="auth-container">
@@ -50,17 +46,14 @@ const Header = ({ currentView, navigateTo, user, onLogout }) => {
               <div className="user-info">
                 <span className="user-greeting">
                   <span className="user-label">Sesión iniciada como: </span>
-                  <span className="user-name">{user.name}</span>
+                  <span className="user-name">{user.name || user.email}</span>
                 </span>
                 <button className="logout-button" onClick={onLogout}>Cerrar sesión</button>
               </div>
             ) : (
-              <button 
-                className={`nav-link login-link ${currentView === 'login' ? 'active' : ''}`}
-                onClick={() => navigateTo('login')}
-              >
+              <NavLink to="/login" className={({ isActive }) => `nav-link login-link ${isActive ? 'active' : ''}`}>
                 Iniciar sesión
-              </button>
+              </NavLink>
             )}
           </div>
         </div>
