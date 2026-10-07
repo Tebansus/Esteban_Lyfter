@@ -1,13 +1,21 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useContext } from 'react';
 import { GlobalContext } from '../context/GlobalContext';
 import { formatPrice } from '../utils/formatPrice';
 import './ProductDetail.css';
 
-const ProductDetail = ({ products }) => {
+const ProductDetail = ({ products, loading }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useContext(GlobalContext);
+
+  if (loading) {
+    return (
+      <div className="detail-container empty">
+        <p>Cargando producto...</p>
+      </div>
+    );
+  }
 
   const product = products.find(p => p.id === parseInt(id));
 
@@ -15,7 +23,7 @@ const ProductDetail = ({ products }) => {
     return (
       <div className="detail-container empty">
         <p>Producto no encontrado.</p>
-        <button className="btn-primary" onClick={() => navigate('/productos')}>Volver al catálogo</button>
+        <Link to="/productos" className="btn-primary" style={{ display: 'inline-block', textDecoration: 'none' }}>Volver al catálogo</Link>
       </div>
     );
   }
@@ -41,16 +49,17 @@ const ProductDetail = ({ products }) => {
             <button 
               className="btn-primary detail-button"
               style={{ backgroundColor: '#28a745', borderColor: '#28a745' }}
-              onClick={() => addToCart({ id: product.id, name: product.nombre, price: product.precio, image_url: product.imagen })}
+              onClick={() => addToCart(product)}
             >
               Agregar al carrito
             </button>
-            <button 
+            <Link 
               className="btn-primary detail-button"
-              onClick={() => navigate('/productos')}
+              to="/productos"
+              style={{ display: 'inline-block', textDecoration: 'none', textAlign: 'center', boxSizing: 'border-box' }}
             >
               Volver al catálogo
-            </button>
+            </Link>
           </div>
         </div>
       </div>

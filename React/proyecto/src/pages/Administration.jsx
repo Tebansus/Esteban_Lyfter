@@ -1,10 +1,13 @@
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { GlobalContext } from '../context/GlobalContext';
 import ProductTable from '../components/ProductTable';
 import ProductForm from '../components/ProductForm';
 import './Administration.css';
 
-const Administration = ({ products, onAddProduct, onDeleteProduct, user }) => {
+const Administration = ({ products, onAddProduct, onDeleteProduct }) => {
   const navigate = useNavigate();
+  const { user } = useContext(GlobalContext);
 
   if (!user || user.role !== 'admin') {
     return (

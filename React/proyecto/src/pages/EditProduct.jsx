@@ -1,10 +1,13 @@
+import { useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { GlobalContext } from '../context/GlobalContext';
 import ProductForm from '../components/ProductForm';
 import './EditProduct.css';
 
-const EditProduct = ({ products, onSave, user }) => {
+const EditProduct = ({ products, onSave }) => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useContext(GlobalContext);
 
   if (!user || user.role !== 'admin') {
     return (

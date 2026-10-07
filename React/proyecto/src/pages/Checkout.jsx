@@ -1,18 +1,25 @@
-import { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useContext, useState, useEffect } from 'react';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { GlobalContext } from '../context/GlobalContext';
+import { formatPrice } from '../utils/formatPrice';
+import { API_BASE_URL } from '../config';
 import './Checkout.css';
 
 const Checkout = () => {
-  const { cart, getCartTotal, clearCart } = useContext(GlobalContext);
+  const { cart, getCartTotal, clearCart, user } = useContext(GlobalContext);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
+    fullName: user ? (user.name || '') : '',
+    email: user ? (user.email || '') : '',
     address: ''
   });
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // If user is not authenticated, they shouldn't be here
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
 
   const handleChange = (e) => {
     setFormData({
@@ -44,7 +51,7 @@ const Checkout = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:3001/api/sales', {
+      const response = await fetch(`${API_BASE_URL}/api/checkout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -88,13 +95,13 @@ const Checkout = () => {
           <ul className="summary-list">
             {cart.map(item => (
               <li key={item.id}>
-                <span>{item.name} (x{item.quantity})</span>
-                <span>${item.price * item.quantity}</span>
+                <span>{item.name} (x{item.quantity} a {formatPrice(item.price)} c/u)</span>
+                <span>{formatPrice(item.price * item.quantity)}</span>
               </li>
             ))}
           </ul>
           <div className="summary-total">
-            <strong>Total: ${getCartTotal()}</strong>
+            <strong>Total: {formatPrice(getCartTotal())}</strong>
           </div>
         </div>
 

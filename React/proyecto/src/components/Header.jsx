@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { GlobalContext } from '../context/GlobalContext';
 import './Header.css';
 
@@ -12,8 +12,14 @@ const PawIcon = () => (
   </svg>
 );
 
-const Header = ({ user, onLogout }) => {
-  const { getCartCount } = useContext(GlobalContext);
+const Header = () => {
+  const { user, logout, getCartCount } = useContext(GlobalContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   return (
     <header className="header">
@@ -48,7 +54,7 @@ const Header = ({ user, onLogout }) => {
                   <span className="user-label">Sesión iniciada como: </span>
                   <span className="user-name">{user.name || user.email}</span>
                 </span>
-                <button className="logout-button" onClick={onLogout}>Cerrar sesión</button>
+                <button className="logout-button" onClick={handleLogout}>Cerrar sesión</button>
               </div>
             ) : (
               <NavLink to="/login" className={({ isActive }) => `nav-link login-link ${isActive ? 'active' : ''}`}>

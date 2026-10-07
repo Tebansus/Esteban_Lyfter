@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { GlobalContext } from '../context/GlobalContext';
 import { formatPrice } from '../utils/formatPrice';
@@ -33,16 +33,17 @@ const Catalog = ({ products }) => {
               <h3 className="product-name">{product.nombre}</h3>
               <p className="product-price">{formatPrice(product.precio)}</p>
               <p className="product-category">{product.categoria}</p>
-              <button 
+              <Link 
                 className="btn-primary product-button"
-                onClick={() => navigate(`/productos/${product.id}`)}
+                to={`/productos/${product.id}`}
+                style={{ display: 'block', textDecoration: 'none', textAlign: 'center', boxSizing: 'border-box' }}
               >
                 Ver detalles
-              </button>
+              </Link>
               <button 
                 className="btn-primary product-button"
                 style={{ marginTop: '0.5rem', backgroundColor: '#28a745', borderColor: '#28a745' }}
-                onClick={() => addToCart({ id: product.id, name: product.nombre, price: product.precio, image_url: product.imagen })}
+                onClick={() => addToCart(product)}
               >
                 Agregar al carrito
               </button>

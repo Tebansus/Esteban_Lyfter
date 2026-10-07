@@ -34,7 +34,7 @@ def add_to_cart():
         return Response(status=400, response="Missing product_id or quantity.")
 
     product = product_repo.get_product_by_id(data['product_id'])
-    if not product or product.stock_quantity < data['quantity']:
+    if not product or product.stock < data['quantity']:
         return Response(status=409, response="Product not available or insufficient stock.")
 
     active_cart = cart_repo.get_active_cart_by_user(user_id)
@@ -71,47 +71,70 @@ def checkout():
         if product is None or product.stock < item['quantity']:
             return Response(status=409, response=f"Insufficient stock for product ID {item['product_id']}.")
         
-        price_at_purchase = Decimal(str(item['price']))
+        price_at_purchase = Decimal(str(product.precio))
         total_price += price_at_purchase * item['quantity']
-        products_to_add.append({"product_id": item['product_id'], "quantity": item['quantity'], "price_at_purchase": price_at_purchase})
+        products_to_add.append({
+            "product_id": item['product_id'],
+            "name": product.nombre,
+            "quantity": item['quantity'],
+            "price_at_purchase": price_at_purchase
+        })
 
-    # Add a dummy address for the user if it doesn't exist
-    try:
-        sales_repo.add_address(user_id=user_id, address_line=data['shipping_address'], city="Unknown", state="Unknown", postal_code="00000", country="Unknown")
-    except Exception:
-        pass # Ignore if error
+    # Add address and get its ID
+    address_id = sales_repo.add_address(user_id=user_id, address_line=data['shipping_address'], city="Unknown", state="Unknown", postal_code="00000", country="Unknown")
 
-    # We need an address ID, let's just get the first one for this user or pass None if allowed.
-    # For simplicity, we will query it or just pass 1 if the table allows it.
-    # Actually, the create_invoice needs an address_id. Let's just create one and get its id.
-    # Wait, sales_repo.add_address doesn't return the ID. Let's just pass 1 or skip address in create_invoice if possible.
-    # Let's bypass address_id requirement for now or add a dummy one.
-    try:
-        invoice_id = sales_repo.create_invoice(user_id=user_id, address_id=1, total=total_price)
-    except:
-        invoice_id = 1
+    # Create invoice and get its ID
+    invoice_id = sales_repo.create_invoice(user_id=user_id, address_id=address_id, total=total_price)
 
-    for product in products_to_add:
+    for product_item in products_to_add:
         # Add item to the invoice
-        try:
-            sales_repo.add_invoice_item(invoice_id=invoice_id, product_id=product['product_id'], quantity=product['quantity'], price=product['price_at_purchase'])
-        except:
-            pass
+        sales_repo.add_invoice_item(invoice_id=invoice_id, product_id=product_item['product_id'], quantity=product_item['quantity'], price=product_item['price_at_purchase'])
         # Atomically decrease the product's stock
-        product_repo.adjust_stock(product['product_id'], quantity_delta=-product['quantity'])
+        product_repo.adjust_stock(product_item['product_id'], quantity_delta=-product_item['quantity'])
 
     # Finalize cart if it exists in backend
     active_cart = cart_repo.get_active_cart_by_user(user_id)
     if active_cart:
         cart_repo.update_cart_status(active_cart.id, 'completed')
 
-    # Simulate sending email
-    print(f"\n--- EMAIL ENVIADO ---")
-    print(f"Para: {data.get('buyer_email')}")
-    print(f"Asunto: Confirmación de compra")
-    print(f"Hola {data.get('buyer_name')}, tu compra por un total de ${total_price} ha sido confirmada.")
-    print(f"Se enviará a: {data.get('shipping_address')}")
-    print(f"---------------------\n")
+    # Send real email
+    import smtplib
+    from email.message import EmailMessage
+
+    buyer_name = data.get('buyer_name', 'Cliente')
+    buyer_email = data.get('buyer_email')
+    shipping_address = data.get('shipping_address')
+
+    msg = EmailMessage()
+    msg['Subject'] = 'Confirmación de compra en PawStore'
+    msg['From'] = 'noreply@pawstore.com'
+    msg['To'] = buyer_email
+
+    items_detail = ""
+    for p in products_to_add:
+        items_detail += f"- {p['name']} (x{p['quantity']}): ${p['price_at_purchase'] * p['quantity']}\n"
+
+    msg.set_content(f"""Hola {buyer_name},
+
+Tu compra por un total de ${total_price} ha sido confirmada.
+Se enviará a: {shipping_address}
+
+Detalle de los productos:
+{items_detail}
+
+Gracias por tu compra.
+El equipo de PawStore""")
+
+    try:
+        # Send via local SMTP server (like MailHog) or a real one if configured
+        with smtplib.SMTP('localhost', 1025) as server:
+            server.send_message(msg)
+    except Exception as e:
+        print(f"No se pudo enviar el correo real: {e}")
+        # Fallback to console print for debug
+        print(f"\n--- EMAIL SIMULADO ---")
+        print(msg.as_string())
+        print(f"----------------------\n")
 
     return jsonify({"message": "Checkout successful", "invoice_id": invoice_id, "total_price": str(total_price)}), 200
 

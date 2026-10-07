@@ -1,10 +1,11 @@
 import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GlobalContext } from '../context/GlobalContext';
+import { formatPrice } from '../utils/formatPrice';
 import './Cart.css';
 
 const Cart = () => {
-  const { cart, updateQuantity, removeFromCart, getCartTotal, clearCart } = useContext(GlobalContext);
+  const { cart, updateQuantity, removeFromCart, getCartTotal } = useContext(GlobalContext);
   const navigate = useNavigate();
 
   return (
@@ -23,7 +24,7 @@ const Cart = () => {
                 <img src={item.image_url} alt={item.name} className="cart-item-image" />
                 <div className="cart-item-details">
                   <h3 className="cart-item-name">{item.name}</h3>
-                  <p className="cart-item-price">Precio: ${item.price}</p>
+                  <p className="cart-item-price">Precio: {formatPrice(item.price)}</p>
                 </div>
                 <div className="cart-item-actions">
                   <div className="quantity-control">
@@ -36,13 +37,13 @@ const Cart = () => {
                   </button>
                 </div>
                 <div className="cart-item-subtotal">
-                  <p>Subtotal: ${item.price * item.quantity}</p>
+                  <p>Subtotal: {formatPrice(item.price * item.quantity)}</p>
                 </div>
               </div>
             ))}
           </div>
           <div className="cart-summary">
-            <h3>Total: ${getCartTotal()}</h3>
+            <h3>Total: {formatPrice(getCartTotal())}</h3>
             <button className="btn btn-primary" onClick={() => navigate('/checkout')}>
               Ir al checkout
             </button>

@@ -3,22 +3,15 @@ import { createContext, useState, useEffect } from 'react';
 export const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [cart, setCart] = useState([]);
-
-  // Load user from localStorage on init (optional, if we want persistence)
-  useEffect(() => {
-    const token = localStorage.getItem('token');
+  const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem('user');
-    if (token && storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+  
+  const [cart, setCart] = useState(() => {
     const storedCart = localStorage.getItem('cart');
-    if (storedCart) {
-      setCart(JSON.parse(storedCart));
-    }
-  }, []);
+    return storedCart ? JSON.parse(storedCart) : [];
+  });
 
   // Save cart to localStorage
   useEffect(() => {
@@ -44,14 +37,21 @@ export const GlobalProvider = ({ children }) => {
   };
 
   const addToCart = (product) => {
+    const itemToAdd = {
+      id: product.id,
+      name: product.nombre || product.name,
+      price: product.precio !== undefined ? product.precio : product.price,
+      image_url: product.imagen || product.image_url,
+    };
+
     setCart((prevCart) => {
-      const existingItem = prevCart.find((item) => item.id === product.id);
+      const existingItem = prevCart.find((item) => item.id === itemToAdd.id);
       if (existingItem) {
         return prevCart.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+          item.id === itemToAdd.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
-      return [...prevCart, { ...product, quantity: 1 }];
+      return [...prevCart, { ...itemToAdd, quantity: 1 }];
     });
   };
 

@@ -19,7 +19,7 @@ import './App.css';
 
 function App() {
   const { user, login, logout } = useContext(GlobalContext);
-  const { products, addProduct, updateProduct, deleteProduct } = useProducts();
+  const { products, loading: productsLoading, addProduct, updateProduct, deleteProduct } = useProducts();
   const navigate = useNavigate();
 
   const handleUpdateProduct = (updatedProduct) => {
@@ -27,19 +27,14 @@ function App() {
     navigate('/admin');
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
-
   return (
     <div className="app-container">
-      <Header user={user} onLogout={handleLogout} />
+      <Header />
       <main className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/productos" element={<Catalog products={products} />} />
-          <Route path="/productos/:id" element={<ProductDetail products={products} />} />
+          <Route path="/productos/:id" element={<ProductDetail products={products} loading={productsLoading} />} />
           <Route path="/carrito" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/confirmacion" element={<PurchaseConfirmation />} />
@@ -49,18 +44,16 @@ function App() {
               products={products}
               onAddProduct={addProduct}
               onDeleteProduct={deleteProduct}
-              user={user}
             />
           } />
           <Route path="/admin/editar/:id" element={
             <EditProduct
               products={products}
               onSave={handleUpdateProduct}
-              user={user}
             />
           } />
           
-          <Route path="/login" element={<Login onLogin={(u) => { login(u); navigate(-1); }} />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/registro" element={<Register />} />
           
           <Route path="*" element={<NotFound />} />
