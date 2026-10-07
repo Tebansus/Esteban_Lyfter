@@ -13,8 +13,8 @@ from JWT_manager import JWT_Manager
 # The fixture initializes the JWT Manager with the specified key paths
 @pytest.fixture(scope='session')
 def jwt_manager():
-    
-    return JWT_Manager(private_key_path="keys/private.pem", public_key_path="keys/public.pem")
+    keys_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'keys'))
+    return JWT_Manager(private_key_path=os.path.join(keys_dir, 'private.pem'), public_key_path=os.path.join(keys_dir, 'public.pem'))
 
 @pytest.fixture
 def app(jwt_manager):

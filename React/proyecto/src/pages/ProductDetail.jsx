@@ -1,12 +1,29 @@
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useContext } from 'react';
+import { GlobalContext } from '../context/GlobalContext';
 import { formatPrice } from '../utils/formatPrice';
 import './ProductDetail.css';
 
-const ProductDetail = ({ product, navigateTo }) => {
+const ProductDetail = ({ products, loading }) => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { addToCart } = useContext(GlobalContext);
+
+  if (loading) {
+    return (
+      <div className="detail-container empty">
+        <p>Cargando producto...</p>
+      </div>
+    );
+  }
+
+  const product = products.find(p => p.id === parseInt(id));
+
   if (!product) {
     return (
       <div className="detail-container empty">
         <p>Producto no encontrado.</p>
-        <button className="btn-primary" onClick={() => navigateTo('catalog')}>Volver al catálogo</button>
+        <Link to="/productos" className="btn-primary" style={{ display: 'inline-block', textDecoration: 'none' }}>Volver al catálogo</Link>
       </div>
     );
   }
@@ -29,15 +46,20 @@ const ProductDetail = ({ product, navigateTo }) => {
           <p className="detail-description">{product.descripcion}</p>
           
           <div className="detail-actions">
-            <p className="detail-info-text">
-              Más adelante aquí se podrá agregar este producto al carrito y completar la compra.
-            </p>
             <button 
               className="btn-primary detail-button"
-              onClick={() => navigateTo('catalog')}
+              style={{ backgroundColor: '#28a745', borderColor: '#28a745' }}
+              onClick={() => addToCart(product)}
+            >
+              Agregar al carrito
+            </button>
+            <Link 
+              className="btn-primary detail-button"
+              to="/productos"
+              style={{ display: 'inline-block', textDecoration: 'none', textAlign: 'center', boxSizing: 'border-box' }}
             >
               Volver al catálogo
-            </button>
+            </Link>
           </div>
         </div>
       </div>

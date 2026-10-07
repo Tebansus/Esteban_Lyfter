@@ -1,6 +1,9 @@
+import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
-const Home = ({ navigateTo }) => {
+const Home = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="home-container">
       <h1 className="home-title">Bienvenido a PawStore</h1>
@@ -12,7 +15,7 @@ const Home = ({ navigateTo }) => {
       </p>
       <button 
         className="btn-primary home-button"
-        onClick={() => navigateTo('catalog')}
+        onClick={() => navigate('/productos')}
       >
         Ver productos
       </button>

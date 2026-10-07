@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 
+import { API_BASE_URL } from '../config';
+
 // URL del backend
-const API_URL = 'http://localhost:3001/api/products';
+const API_URL = `${API_BASE_URL}/api/products`;
 
 export function useProducts() {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchProducts();
@@ -12,12 +15,15 @@ export function useProducts() {
 
   const fetchProducts = async () => {
     try {
+      setLoading(true);
       const response = await fetch(API_URL);
       if (!response.ok) throw new Error('Error fetching products');
       const data = await response.json();
       setProducts(data);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -78,5 +84,5 @@ export function useProducts() {
     }
   };
 
-  return { products, addProduct, updateProduct, deleteProduct, fetchProducts };
+  return { products, loading, addProduct, updateProduct, deleteProduct, fetchProducts };
 }
