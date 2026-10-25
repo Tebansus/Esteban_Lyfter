@@ -44,11 +44,15 @@ class SalesRepo:
 
     # Address function to add a new address for a user
     def add_address(self, user_id, **kwargs):       
-        self.pg_manager.add_table_entry(self.addresses_table, user_id=user_id, **kwargs)
+        with self.pg_manager.session_scope() as sess:
+            result = sess.execute(self.addresses_table.insert().values(user_id=user_id, **kwargs).returning(self.addresses_table.c.id))
+            return result.fetchone()[0]
 
     # Create Invoice function which uses the PG manager generic function to add an invoice
     def create_invoice(self, user_id, address_id, total):        
-        self.pg_manager.add_table_entry(self.invoices_table,user_id=user_id,billing_address_id=address_id, total_price=total)
+        with self.pg_manager.session_scope() as sess:
+            result = sess.execute(self.invoices_table.insert().values(user_id=user_id, billing_address_id=address_id, total_price=total).returning(self.invoices_table.c.id))
+            return result.fetchone()[0]
     # Add invoice item function to add an item to an invoice using the cross-table
     def add_invoice_item(self, invoice_id, product_id, quantity, price):        
         self.pg_manager.add_table_entry(self.invoice_items_table,invoice_id=invoice_id,product_id=product_id,quantity=quantity,price_at_purchase=price)
