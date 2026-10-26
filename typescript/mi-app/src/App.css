@@ -1,0 +1,65 @@
+/* Espacio para el contenido. */
+main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+section {
+  margin-top: 24px;
+  padding: 20px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  overflow-wrap: anywhere;
+}
+
+h1,
+h2 {
+  margin-top: 0;
+}
+
+/* Campos del formulario. */
+form {
+  display: grid;
+  gap: 8px;
+}
+
+input,
+select {
+  width: 100%;
+  min-width: 0;
+  padding: 8px;
+  margin-bottom: 8px;
+  border: 1px solid #777;
+  border-radius: 4px;
+  background: white;
+  color: #222;
+}
+
+button {
+  justify-self: start;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 4px;
+  background: #256b42;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #194a2e;
+}
+
+/* Lista de ejercicios. */
+.exercise-list {
+  padding-left: 20px;
+}
+
+.exercise-list li {
+  margin-bottom: 16px;
+}
+
+.exercise-list p {
+  margin: 4px 0;
+}
