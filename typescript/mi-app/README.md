@@ -44,7 +44,7 @@ El perfil se puede actualizar sin perder la rutina. Todos los datos están en me
 
 ## Ejemplo del enunciado
 
-Perfil: María López, 28 años, nivel `intermediate`.
+Perfil: María López, 28 años, nivel `Intermedio`.
 
 | Día | Ejercicio | Minutos | Calorías por minuto | Distancia en km |
 | --- | --- | --- | --- | --- |
@@ -65,7 +65,7 @@ Varios ejercicios en un mismo día cuentan como un solo día entrenado. En caso 
 
 ## Archivos principales
 
-- `src/types.ts`: tipos del usuario, ejercicios y rutina. Los niveles permitidos son `beginner`, `intermediate` y `advanced`.
+- `src/types.ts`: tipos del usuario, ejercicios y rutina. Los niveles permitidos son `Principiante`, `Intermedio` y `Avanzado`.
 - `src/statistics.ts`: cálculos de calorías, ritmo, duración y comparaciones.
 - `src/App.tsx`: formularios y resultados.
 - `tests/statistics.test.ts`: pruebas de los cálculos.

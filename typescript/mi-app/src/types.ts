@@ -1,5 +1,5 @@
 // Tipos para el perfil y la rutina.
-export type ExperienceLevel = 'beginner' | 'intermediate' | 'advanced'
+export type ExperienceLevel = 'Principiante' | 'Intermedio' | 'Avanzado'
 
 export type WeekDay =
   | 'Lunes'

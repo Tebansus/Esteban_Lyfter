@@ -99,10 +99,10 @@ function App(): JSX.Element {
           <input id="age" name="age" type="number" min="1" step="1" required />
 
           <label htmlFor="experienceLevel">Nivel de experiencia</label>
-          <select id="experienceLevel" name="experienceLevel" defaultValue="beginner">
-            <option value="beginner">beginner</option>
-            <option value="intermediate">intermediate</option>
-            <option value="advanced">advanced</option>
+          <select id="experienceLevel" name="experienceLevel" defaultValue="Principiante">
+            <option value="Principiante">Principiante</option>
+            <option value="Intermedio">Intermedio</option>
+            <option value="Avanzado">Avanzado</option>
           </select>
 
           <button type="submit">Guardar perfil</button>
