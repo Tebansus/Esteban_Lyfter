@@ -20,9 +20,35 @@ h2 {
 }
 
 /* Campos del formulario. */
-form {
+form,
+fieldset {
   display: grid;
   gap: 8px;
+}
+
+fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid #ccc;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.checkbox-label input {
+  width: auto;
+  margin: 0;
+}
+
+/* Separación de las categorías. */
+.category-group {
+  margin-top: 16px;
+  border-bottom: 1px solid #ddd;
 }
 
 input,

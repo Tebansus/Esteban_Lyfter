@@ -1,6 +1,6 @@
-# FitTracker - Sprint 0
+# FitTracker - Sprint 1
 
-Aplicación básica de React y TypeScript para guardar un perfil, registrar ejercicios y ver estadísticas de una rutina semanal.
+Aplicación básica de React y TypeScript para guardar un perfil y su membresía, registrar ejercicios por categoría y consultar las estadísticas de una rutina semanal. Extiende el Sprint 0.
 
 ## Ejecutar
 
@@ -21,11 +21,10 @@ Abrir la dirección que indique Vite en la terminal.
 ```bash
 npm run typecheck
 npm run lint
-npm test
 npm run build
 ```
 
-El comando `typecheck` ejecuta TypeScript con `--strict`. Las configuraciones también tienen `strict: true`. Las pruebas usan el ejecutor incluido en Node.js.
+El comando `typecheck` ejecuta TypeScript con `--strict`. Las configuraciones también tienen `strict: true`.
 
 Para ver la compilación:
 
@@ -35,39 +34,48 @@ npm run preview
 
 ## Uso
 
-1. Ingresar nombre, edad y nivel, y pulsar **Guardar perfil**.
-2. Agregar cada ejercicio con su día, duración y calorías por minuto.
-3. Completar la distancia solamente cuando corresponda.
-4. Consultar la lista, el total, el promedio por día entrenado y el resumen comparativo.
+1. Ingresar nombre, edad y nivel de experiencia.
+2. Seleccionar el plan de membresía, su fecha de inicio y si está activa. Pulsar **Guardar perfil**.
+3. Elegir primero la categoría del ejercicio.
+4. Completar el nombre, día, duración y calorías por minuto, junto con los campos de la categoría:
+   - Cardio: distancia y zona de frecuencia cardíaca del 1 al 5. El ritmo se calcula con la duración y la distancia.
+   - Fuerza: series, repeticiones por serie y peso en kg.
+   - Flexibilidad: número de poses.
+5. Pulsar **Agregar ejercicio** para actualizar el catálogo y el resumen.
 
-El perfil se puede actualizar sin perder la rutina. Todos los datos están en memoria y se borran al recargar la página. No hay backend ni almacenamiento.
+El catálogo muestra la cantidad de ejercicios, minutos y calorías de cada categoría. También conserva el total de calorías, el promedio por día entrenado, los porcentajes y la comparación de duración y calorías del Sprint 0.
+
+El perfil se puede actualizar sin perder la rutina ni cambiar sus identificadores. Todos los datos están en memoria y se borran al recargar la página.
 
 ## Ejemplo del enunciado
 
-Perfil: María López, 28 años, nivel `Intermedio`.
+Perfil: Ana García, 28 años, nivel `Intermedio`, plan `premium`, inicio `2026-11-15`, membresía activa.
 
-| Día | Ejercicio | Minutos | Calorías por minuto | Distancia en km |
-| --- | --- | --- | --- | --- |
-| Lunes | Running | 45 | 10.4 | 5.2 |
-| Miércoles | Squats | 30 | 10 | Dejar vacío |
-| Viernes | Swimming | 60 | 12 | 9.6 |
+| Día | Categoría | Ejercicio | Minutos | Calorías por minuto | Datos de la categoría |
+| --- | --- | --- | --- | --- | --- |
+| Lunes | Cardio | Running | 45 | 10.4 | 5.2 km, zona 3 |
+| Miércoles | Cardio | Cycling | 60 | 9 | 20 km, zona 2 |
+| Viernes | Fuerza | Bench Press | 30 | 10 | 4 series, 10 repeticiones, 60 kg |
+| Domingo | Flexibilidad | Yoga Flow | 40 | 4 | 12 poses |
 
 Resultados esperados:
 
-- Calorías: Running 468, Squats 300 y Swimming 720.
-- Ritmos: Running 8.65 min/km y Swimming 6.25 min/km. Squats no muestra ritmo.
-- Total: 1488 calorías.
-- Promedio por día entrenado: 496 calorías.
-- Mayor duración y más calorías: Swimming, con 60 minutos y 48% del total.
-- Porcentajes individuales: 31%, 20% y 48%. Se redondean al entero más cercano y pueden no sumar 100%.
+- Cardio: 2 ejercicios, 105 minutos y 1008 kcal. Ritmos: Running 8.65 min/km y Cycling 3.00 min/km.
+- Fuerza: 1 ejercicio, 30 minutos y 300 kcal.
+- Flexibilidad: 1 ejercicio, 40 minutos y 160 kcal.
+- Total: 4 ejercicios y 1468 kcal.
+- Promedio por día entrenado: 367 kcal.
+- Mayor duración y más calorías: Cycling, con 60 minutos y 540 kcal.
 
-Varios ejercicios en un mismo día cuentan como un solo día entrenado. En caso de empate, el resumen muestra el primer ejercicio registrado. Una rutina vacía muestra cero calorías y ningún ganador.
+Varios ejercicios en un mismo día cuentan como un solo día entrenado. Los porcentajes se redondean al entero más cercano y pueden no sumar 100%. En caso de empate, el resumen muestra el primer ejercicio registrado. Una categoría vacía muestra cero ejercicios, minutos y calorías.
 
 ## Archivos principales
 
-- `src/types.ts`: tipos del usuario, ejercicios y rutina. Los niveles permitidos son `Principiante`, `Intermedio` y `Avanzado`.
-- `src/statistics.ts`: cálculos de calorías, ritmo, duración y comparaciones.
+- `src/types.ts`: todos los tipos del dominio. `Exercise` une cardio, fuerza y flexibilidad usando `category` para distinguirlos. Cada categoría tiene sus propios campos obligatorios. `User` combina los datos personales y de membresía con una intersección de tipos. Los identificadores de ejercicios, usuarios y rutinas son cadenas generadas con `crypto.randomUUID()`.
+- `src/statistics.ts`: cálculos del Sprint 0. El ritmo solo corresponde a cardio.
+- `src/catalog.ts`: descripciones y subtotales por categoría.
 - `src/App.tsx`: formularios y resultados.
-- `tests/statistics.test.ts`: pruebas de los cálculos.
 
-Solo se incluye el Sprint 0. No se incluyen el catálogo, contratos con interfaces, una capa de validaciones en runtime, API externa, almacenamiento genérico ni dashboard de los siguientes sprints. Los formularios usan restricciones básicas de HTML.
+Los niveles permitidos siguen siendo `Principiante`, `Intermedio` y `Avanzado`. Los planes disponibles son `basic` y `premium`.
+
+El alcance llega hasta el Sprint 1. Los contratos con interfaces, las validaciones avanzadas en runtime, la API externa, el almacenamiento genérico y el dashboard quedan para futuros sprints. Los formularios usan restricciones básicas de HTML.
