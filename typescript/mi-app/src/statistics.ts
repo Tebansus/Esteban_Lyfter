@@ -7,7 +7,7 @@ export function calculateCalories(exercise: Exercise): number {
 
 // Ritmo en minutos por kilómetro.
 export function calculatePace(exercise: Exercise): number | undefined {
-  if (exercise.distanceKm === undefined || exercise.distanceKm <= 0) {
+  if (exercise.category !== 'cardio' || exercise.distanceKm <= 0) {
     return undefined
   }
 

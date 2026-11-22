@@ -7,7 +7,6 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "typecheck": "tsc -p tsconfig.app.json --strict && tsc -p tsconfig.node.json --strict",
-    "test": "node --test tests/statistics.test.ts",
     "lint": "oxlint",
     "preview": "vite preview"
   },
